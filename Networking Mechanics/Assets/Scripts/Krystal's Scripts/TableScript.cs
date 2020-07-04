@@ -11,9 +11,9 @@ public class TableScript : MonoBehaviour
     private Collider tableTriggerArea;
 
     //method to find seats and seat customers
-    public string chairTag = "Chair", guestTag = "Guests";
+    public string chairTag = "Chair", customerTag = "Customer";
     public List<GameObject> chairs = new List<GameObject>();
-    public List<GameObject> guests = new List<GameObject>();
+    public List<GameObject> customers = new List<GameObject>();
 
 
     void Start()
@@ -25,17 +25,22 @@ public class TableScript : MonoBehaviour
             FindObjectwithTag(chairTag, chairs);
         }
 
-        if(guestTag != null)
+        if(customerTag != null)
         {
-            FindObjectwithTag(guestTag, guests);
+            FindObjectwithTag(customerTag, customers);
         }
 
         //update the number of seats the table has
         numSeats = chairs.Count;
+
+        foreach(GameObject customer in customers)
+        {
+            customer.SetActive(false);
+        }
     }
 
 
-
+    //-----------------------------------------FIGURE OUT THE NUMBER OF SEATS AT THE TABLE
     //get all children of the table
     public void FindObjectwithTag(string tag, List<GameObject> list)
     {
@@ -60,7 +65,11 @@ public class TableScript : MonoBehaviour
     }
 
 
-    //check number of guests
+
+
+
+    //-------------------------------------------------------- METHODS RELATED TO CUSTOMERS INTERACTING WITH TABLE AND SEATS
+    //check number of customers
     public bool CheckSufficientSeats(int numGuests)
     {
         if (numGuests <= numSeats)
@@ -96,9 +105,16 @@ public class TableScript : MonoBehaviour
         //disable the table collider
         tableTriggerArea.enabled = false;
 
+        Debug.Log("Guests are being seated");
+        //call the seated event
+
         for (int i = 0; i < numGuests; i++)
-        {
-            
+        {   
+            //make customers visisble
+            customers[i].SetActive(true);
+
+            //animate customers
+            Debug.Log("Animate the customers");
         }
 
         numSeated = numGuests;
@@ -131,4 +147,4 @@ public class TableScript : MonoBehaviour
 
 
 
-}//class
+}//end of tablescript class

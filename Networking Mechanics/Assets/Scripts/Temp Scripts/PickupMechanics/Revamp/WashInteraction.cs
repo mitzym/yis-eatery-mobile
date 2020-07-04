@@ -10,7 +10,7 @@ using UnityEngine;
 public class WashInteraction : MonoBehaviour
 {
     [Header("Sink Positions")]
-    public Transform[] sinkPositions; //array of sink positions
+    [HideInInspector] public static GameObject sinkParentObj;
 
     public Transform[] cleanPlateSpawnPositions; //array of possible spawn positions for the clean plates
 
@@ -43,9 +43,20 @@ public class WashInteraction : MonoBehaviour
     //only if PLACE PLATE IN SINK state
     public void PlacePlateInSink(GameObject heldPlate, List<GameObject> Inventory)
     {
+        Transform[] sinkPositions = new Transform[2];
+
+        if (sinkParentObj.GetComponent<SinkScript_Temp>() != null)
+        {
+            sinkPositions = sinkParentObj.GetComponent<SinkScript_Temp>().sinkPositions;
+        } else
+        {
+            Debug.Log("SinkScript not present");
+        }
+        
+
         //loop through plate in sink array
         //if the gameobject is null, assign heldplate to it
-        for(int i = 0; i < platesInSink.Length; i++)
+        for (int i = 0; i < platesInSink.Length; i++)
         {
             if(platesInSink[i] == null)
             {
@@ -193,9 +204,12 @@ public class WashInteraction : MonoBehaviour
         {
             //if player is holding a plate
             if (holdingDirtyPlate)
-            {   
+            {
+                sinkParentObj = other.gameObject;
+
                 //player can place plate in the sink
                 PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanPlacePlateInSink;
+
             }
 
             //if player was washing plate, if they enter the sink zone again they can immediately wash

@@ -1,8 +1,9 @@
 ﻿/*
- *  Usage: attach to the customer capsule
+ *  Usage: attach to parent of customer prefab
  */
 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class CustomerPatience : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            StartPatienceMeter(10);
+            StartPatienceMeter(CustomerPatienceStats.customerPatience_Queue);
         }
 
         if (Input.GetKeyDown(KeyCode.X))
@@ -35,12 +36,15 @@ public class CustomerPatience : MonoBehaviour
     */
     #endregion
 
-
-    //getting the other scripts
+    private void Start()
+    {
+        //disable the image
+        patienceMeterImg.enabled = false;
+    }
 
 
     //public method to call to start coroutine
-    public void StartPatienceMeter(float totalPatience)
+    public void StartPatienceMeter(float totalPatience, Action callback)
     {
         if (isCoroutineRunning)
         {
@@ -50,7 +54,7 @@ public class CustomerPatience : MonoBehaviour
 
         isCoroutineRunning = true;
 
-        patienceMeterCoroutine = StartCoroutine("UpdatePatienceMeter", totalPatience);
+        patienceMeterCoroutine = StartCoroutine(UpdatePatienceMeter(totalPatience, callback));
     }
 
 
@@ -72,11 +76,13 @@ public class CustomerPatience : MonoBehaviour
     }
 
 
-    //method that updates customers' patience meter
-    private IEnumerator UpdatePatienceMeter(float totalPatience)
+    //method that updates customers' patience meter, then, when patience runs out, calls the method (callback) passed into it 
+    //understanding callbacks: https://stackoverflow.com/questions/54772578/passing-a-function-as-a-function-parameter/54772707
+    private IEnumerator UpdatePatienceMeter(float totalPatience, Action callback)
     {
         float currentPatience = totalPatience;
 
+        //enable the patience meter img so player can see
         patienceMeterImg.enabled = true;
 
         while (currentPatience > 0)
@@ -85,12 +91,14 @@ public class CustomerPatience : MonoBehaviour
             currentPatience -= updateFrequency;
             patienceMeterImg.fillAmount = currentPatience / totalPatience;
 
-            Debug.Log(patienceMeterImg.fillAmount);
-
             yield return new WaitForSeconds(updateFrequency);
         }
 
         Debug.Log("Calling the impatient method");
+        callback?.Invoke();
+
+        //disable the image
+        patienceMeterImg.enabled = false;
 
         isCoroutineRunning = false;
 

@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Krystal's Scenes/PlayerInteraction and Customers.unity
     guid: bf1331c9277b7454699141618f62f2f5
+  - enabled: 1
+    path: Assets/Scenes/Krystal's Scenes/Patience Mechanics.unity
+    guid: a5c53f013badf3e46823872a59da5d15
   m_configObjects: {}
