@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 419268806644753130}
   - component: {fileID: 419268806644753129}
   - component: {fileID: 419268806644753128}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Customer_CapsuleBody
   m_TagString: Customer
   m_Icon: {fileID: 0}
@@ -596,8 +596,8 @@ GameObject:
   - component: {fileID: 4217755499028838568}
   - component: {fileID: 4217755499028838571}
   - component: {fileID: 4217755499028838572}
-  - component: {fileID: 4217755499028838570}
-  m_Layer: 0
+  - component: {fileID: 3156175993398286783}
+  m_Layer: 20
   m_Name: Customer_Queueing_Prefab
   m_TagString: Customer
   m_Icon: {fileID: 0}
@@ -650,7 +650,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   updateFrequency: 0.2
   patienceMeterImg: {fileID: 4217755500455560489}
---- !u!114 &4217755499028838570
+--- !u!114 &3156175993398286783
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

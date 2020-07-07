@@ -18,7 +18,14 @@ public class CustomerAnimationManager : MonoBehaviour
     //customer angry while sitting
     public void AngrySitAnim()
     {
-        Debug.Log("AngrySitAnim called, nothign is here though");
+        Debug.Log("AngrySitAnim called, nothing is here though");
+    }
+
+
+    //customer curling up into a ball while being carried
+    public void CurlUpAnim()
+    {
+        Debug.Log("CurlUpAnim called, nothing is here though");
     }
 
 }

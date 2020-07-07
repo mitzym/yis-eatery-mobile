@@ -8,32 +8,37 @@ public class TableScript : MonoBehaviour
 {
     [HideInInspector, Range(0, 6)] public int numSeats = 0;
     private int numSeated = 0;
-    private Collider tableTriggerArea;
 
-    //method to find seats and seat customers
-    [SerializeField] private string chairTag = "Chair", customerTag = "Customer";
+    //method to find seated customer prefabs
+    [SerializeField] private string customerTag = "Customer";
+    [SerializeField] private List<GameObject> customers = new List<GameObject>();
+    public List<GameObject> Customers
+    {
+        get { return customers; }
+        private set { customers = value; }
+    }
+    public GameObject dirtyDishPrefab;
 
-    [HideInInspector] public List<GameObject> chairs = new List<GameObject>();
-    [HideInInspector] public List<GameObject> customers = new List<GameObject>();
+    public TableFeedback tableFeedbackScript;
 
 
     void Start()
     {
-        tableTriggerArea = gameObject.GetComponent<Collider>();
+        //add current table to table collider manager list
+        TableColliderManager.AddTableToTableColliderManager(gameObject);
 
-        if (chairTag != null)
-        {
-            FindObjectwithTag(chairTag, chairs);
-        }
-
+        /*
+        //get all the customers childed to the table by identifying them via their tag
         if(customerTag != null)
         {
             FindObjectwithTag(customerTag, customers);
         }
+        */
 
         //update the number of seats the table has
-        numSeats = chairs.Count;
+        numSeats = customers.Count;
 
+        //disable all customers in thehierarchy at the start of the game
         foreach(GameObject customer in customers)
         {
             customer.SetActive(false);
@@ -41,6 +46,8 @@ public class TableScript : MonoBehaviour
     }
 
 
+
+    #region Find Objects and Add Them to Lists
     //-----------------------------------------FIGURE OUT THE NUMBER OF SEATS AT THE TABLE
     //get all children of the table
     public void FindObjectwithTag(string tag, List<GameObject> list)
@@ -65,7 +72,7 @@ public class TableScript : MonoBehaviour
         }
     }
 
-
+#endregion
 
 
 
@@ -73,6 +80,8 @@ public class TableScript : MonoBehaviour
     //check number of customers
     public bool CheckSufficientSeats(int numGuests)
     {
+        Debug.Log("checking if there are sufficient seats");
+
         if (numGuests <= numSeats)
         {
             if (numGuests < numSeats)
@@ -84,15 +93,17 @@ public class TableScript : MonoBehaviour
                 Debug.Log("enough seats for guests");
             }
 
+            //seat the guests
             SeatGuests(numGuests);
+
             return true;
         }
         else
         {
             Debug.Log("more guests than seats");
-            
-            //alert the player that there aren't enough seats
-            //---------------------------------------------------------------------------------------------------------------------------add later
+
+            //feedback to player that there are insufficient seats
+            tableFeedbackScript.NotEnoughSeats();
 
             return false;
         }
@@ -103,9 +114,6 @@ public class TableScript : MonoBehaviour
     //position 1 guest at every seat, then call the method on the customer to manage their sitting animation
     public void SeatGuests(int numGuests)
     {
-        //disable the table collider
-        tableTriggerArea.enabled = false;
-
         Debug.Log("Guests are being seated");
         //call the seated event
 
@@ -123,7 +131,7 @@ public class TableScript : MonoBehaviour
 
 
     //call this method when the table has no guests seated at it
-    public void EmptyTable(bool isTableDirty = false)
+    public void EmptyTable(bool isTableDirty)
     {
         if (isTableDirty)
         {
@@ -133,8 +141,6 @@ public class TableScript : MonoBehaviour
             SpawnDirtyDishes(numSeated);
 
         }
-
-        tableTriggerArea.enabled = true;
 
     }
 

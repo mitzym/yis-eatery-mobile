@@ -47,6 +47,7 @@ public class UIManager : MonoBehaviour
     }
 
     // Update is called once per frame
+    /*
     void Update()
     {
         DisplayGrayIcon();
@@ -58,7 +59,7 @@ public class UIManager : MonoBehaviour
 
 
 
-    }
+    }*/
 
 
 
@@ -128,13 +129,13 @@ public class UIManager : MonoBehaviour
     {
         
         //if there is a held object
-        if (PlayerInteractionManager.heldObject)
+        if (PlayerInteractionManager.detectedObject)
         {
-            Debug.Log("UIManager: Held object is " + PlayerInteractionManager.heldObject.tag);
+            Debug.Log("UIManager: Held object is " + PlayerInteractionManager.detectedObject.tag);
             //show the actual icon
             
 
-            switch (PlayerInteractionManager.heldObject.tag)
+            switch (PlayerInteractionManager.detectedObject.tag)
             {
                 case "Rice":
                     buttonIcon.sprite = riceIcon;

@@ -11,6 +11,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerInteractionManager : MonoBehaviour
 {
+    [SerializeField] private string customerTag = "Customer";
+
     //RAYCAST VARIABLES
     public float raycastLength = 2f; //how far the raycast extends
 
@@ -21,9 +23,6 @@ public class PlayerInteractionManager : MonoBehaviour
     private int layerMask = 1 << 8 | 1 << 9 | 1 << 10 | 1 << 13;
 
     public static GameObject detectedObject;
-
-    //Static variable for currentlyheld object
-    public static GameObject heldObject;
 
     //List of objects in player's inventory, static and same throughout all scripts
     public static List<GameObject> objectsInInventory = new List<GameObject>();
@@ -39,6 +38,7 @@ public class PlayerInteractionManager : MonoBehaviour
     private IngredientInteraction ingredientInteraction;
     private TableInteraction tableInteraction;
     private WashInteraction washInteraction;
+    private PlayerCustomerInteractionManager customerInteraction;
     
 
     //Player states
@@ -66,7 +66,11 @@ public class PlayerInteractionManager : MonoBehaviour
         CanWashPlate,
         WashingPlate,
         StoppedWashingPlate,
-        FinishedWashingPlate
+        FinishedWashingPlate,
+
+        //Customer Interaction
+        CanPickUpCustomer,
+        HoldingCustomer
     }
 
     public static PlayerState playerState;
@@ -78,6 +82,7 @@ public class PlayerInteractionManager : MonoBehaviour
         ingredientInteraction = gameObject.GetComponent<IngredientInteraction>();
         tableInteraction = gameObject.GetComponent<TableInteraction>();
         washInteraction = gameObject.GetComponent<WashInteraction>();
+        customerInteraction = gameObject.GetComponent<PlayerCustomerInteractionManager>();
 
         playerState = PlayerState.Default;
     }
@@ -112,7 +117,7 @@ public class PlayerInteractionManager : MonoBehaviour
             }
         }
 
-      
+        Debug.Log("PlayerInteractionManager - Player state is currently: " + playerState);
 
         RaycastHit hit;
 
@@ -132,16 +137,32 @@ public class PlayerInteractionManager : MonoBehaviour
             {
                 //set hit object as detectedobject
                 detectedObject = hit.collider.gameObject;
+
+                //If the detected obj is a customer, change the player state
+                if (hit.collider.gameObject.CompareTag("Customer"))
+                {
+                    playerState = PlayerState.CanPickUpCustomer;
+                }
             }
             else
             {
-                //Throw a warning
-                Debug.LogWarning("PlayerInteractionManager - Detected object already has a reference!");
+                if(playerState == PlayerState.HoldingCustomer)
+                {
+                    //set hit object as detectedobject
+                    detectedObject = hit.collider.gameObject;
+                    Debug.Log("detected object: " + detectedObject.tag);
+                }
+                else
+                {
+                    //Throw a warning
+                    Debug.LogWarning("PlayerInteractionManager - Detected object already has a reference!");
+                }
+
             }
             
 
             //returns the detectedobject's layer (number) as a name
-            Debug.Log("PlayerInteractionManager - Detected object layer: " + LayerMask.LayerToName(detectedObject.layer) + " of layer " + detectedObject.layer);
+            //Debug.Log("PlayerInteractionManager - Detected object layer: " + LayerMask.LayerToName(detectedObject.layer) + " of layer " + detectedObject.layer);
         }
         else
         {
@@ -160,19 +181,19 @@ public class PlayerInteractionManager : MonoBehaviour
         {
             //spawning ingredients from shelves states
             case PlayerState.CanSpawnEgg:
-                shelfInteraction.SpawnEgg(heldObject, objectsInInventory, attachPoint);
+                shelfInteraction.SpawnEgg(detectedObject, objectsInInventory, attachPoint);
                 break;
 
             case PlayerState.CanSpawnChicken:
-                shelfInteraction.SpawnChicken(heldObject, objectsInInventory, attachPoint);
+                shelfInteraction.SpawnChicken(detectedObject, objectsInInventory, attachPoint);
                 break;
 
             case PlayerState.CanSpawnCucumber:
-                shelfInteraction.SpawnCucumber(heldObject, objectsInInventory, attachPoint);
+                shelfInteraction.SpawnCucumber(detectedObject, objectsInInventory, attachPoint);
                 break;
 
             case PlayerState.CanSpawnRice:
-                shelfInteraction.SpawnRice(heldObject, objectsInInventory, attachPoint);
+                shelfInteraction.SpawnRice(detectedObject, objectsInInventory, attachPoint);
                 break;
                 
 
@@ -182,7 +203,7 @@ public class PlayerInteractionManager : MonoBehaviour
                 break;
 
             case PlayerState.CanDropIngredient:
-                ingredientInteraction.DropIngredient(heldObject, objectsInInventory, dropOffPoint);
+                ingredientInteraction.DropIngredient(detectedObject, objectsInInventory, dropOffPoint);
                 break;
 
             case PlayerState.CanPickUpDirtyPlate:
@@ -191,15 +212,25 @@ public class PlayerInteractionManager : MonoBehaviour
 
             //Washing plate states
             case PlayerState.CanPlacePlateInSink:
-                washInteraction.PlacePlateInSink(heldObject, objectsInInventory);
+                washInteraction.PlacePlateInSink(detectedObject, objectsInInventory);
                 break;
 
             case PlayerState.CanWashPlate:
                 washInteraction.WashDirtyPlate();
                 break;
 
+            case PlayerState.CanPickUpCustomer:
+                Debug.Log("PlayerInteractionManager - Player state is currently: " + playerState);
+                customerInteraction.PickCustomerUp(detectedObject, objectsInInventory, attachPoint);
+                break;
+
+            case PlayerState.HoldingCustomer:
+                Debug.Log("Holding customer player state");
+                customerInteraction.SeatCustomer(objectsInInventory, detectedObject);
+                break;
+
             default:
-                Debug.Log("default");
+                Debug.Log("default case");
                 break;
         }
     }
@@ -213,7 +244,7 @@ public class PlayerInteractionManager : MonoBehaviour
     }
 
     public void CheckPlayerStateAndInventory()
-    {
+    {/*
         //checks for inventory contents
         foreach (var inventoryObject in objectsInInventory)
         {
@@ -221,11 +252,11 @@ public class PlayerInteractionManager : MonoBehaviour
         }
 
         ////check inventory count
-        Debug.Log("Inventory count: " + objectsInInventory.Count);
-
+        //Debug.Log("Inventory count: " + objectsInInventory.Count);
+        
         //checks for player state
         Debug.Log("PlayerInteractionManager - Player state is currently: " + playerState);
-
+        */
         if (playerState == PlayerState.FinishedWashingPlate)
         {
             washInteraction.FinishWashingPlate();

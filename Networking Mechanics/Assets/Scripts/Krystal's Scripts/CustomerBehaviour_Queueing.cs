@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class CustomerBehaviour_Queueing : CustomerBehaviour
 {
-    [Header("Customer Animation and Feedback")]
-
     [Header("Group Size Icon Variables")]
     [SerializeField] private Text groupSizeText;
     [SerializeField] private GameObject groupSizeIcon;
@@ -95,10 +93,12 @@ public class CustomerBehaviour_Queueing : CustomerBehaviour
 
     }
 
-    public void CustomerPickedUp()
+    public void CustomerPickedUp(Transform carryPos)
     {
         //stop the patience meter
         TriggerPatienceMeter(false);
+
+        Debug.Log("Animating the customer curling up: " + carryPos);
     }
 
     public void CustomerWaitsTooLong()

@@ -57,9 +57,7 @@ public class IngredientInteraction : MonoBehaviour
          //Change layer to Player/pickeup so cannot be detected by other players
         // detectedObject.layer = LayerMask.NameToLayer("PickedUp");
 
-        //change held object to be the detected object
-        PlayerInteractionManager.heldObject = detectedIngredient;
-        Debug.Log("Ingredient Interaction - Player is holding " + PlayerInteractionManager.heldObject);
+        Debug.Log("Ingredient Interaction - Player is holding " + PlayerInteractionManager.detectedObject);
     }
 
     //Drop ingredient function
@@ -96,8 +94,6 @@ public class IngredientInteraction : MonoBehaviour
                     //Set rotation back to 0
                     heldIngredient.transform.rotation = Quaternion.identity;
 
-                    //set held object to null, player is not holding anything
-                    PlayerInteractionManager.heldObject = null;
                     return;
                 }
             }
@@ -119,8 +115,6 @@ public class IngredientInteraction : MonoBehaviour
             //Set rotation back to 0
             heldIngredient.transform.rotation = Quaternion.identity;
 
-            //set held object to null, player is not holding anything
-            PlayerInteractionManager.heldObject = null;
         }
 
         
@@ -179,8 +173,8 @@ public class IngredientInteraction : MonoBehaviour
                 PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanDropIngredient;
             }
         }
-        //if there is no detected object, player state returns to default
-        if (!PlayerInteractionManager.detectedObject && !WashInteraction.placedPlateInSink)
+        //if there is no detected object + the player isn't holding a customer, player state returns to default
+        if (!PlayerInteractionManager.detectedObject && !WashInteraction.placedPlateInSink && PlayerInteractionManager.playerState != PlayerInteractionManager.PlayerState.HoldingCustomer)
         {
             PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
         }

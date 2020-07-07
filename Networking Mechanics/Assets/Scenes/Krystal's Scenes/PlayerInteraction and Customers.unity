@@ -1548,29 +1548,6 @@ MonoBehaviour:
     type: 3}
   ricePrefab: {fileID: 5074317808852224758, guid: 08731529c14c84142a3299d89fc78294,
     type: 3}
---- !u!114 &338889993
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 338889991}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b26aa2e88ed18af4087a08bdc8f008f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sinkPosition: {fileID: 629626963}
-  sinkPosition2: {fileID: 1363903126}
-  cleanPlateSpawnPosition: {fileID: 1392199596}
-  cleanPlatePrefab: {fileID: 8806658446990376049, guid: 6ccccc93dea15884190831a3aea1b89f,
-    type: 3}
-  platesBeingHeld: []
-  startTimer: 0
-  stoppedWashingPlate: 0
-  holdingDirtyPlate: 0
-  showWashIcon: 0
-  platesInSink: 0
 --- !u!114 &338889994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1596,6 +1573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00663290ace4ca448a0aa5dd8b3325e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  customerTag: Customer
   raycastLength: 1.5
   distFromObject: 0
   attachPoint: {fileID: 587659102}

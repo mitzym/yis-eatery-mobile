@@ -83,9 +83,6 @@ public class SinkInteraction : MonoBehaviour
         //Set rotation back to 0
         heldPlate.transform.rotation = Quaternion.identity;
 
-        //set held object to null, player is not holding anything
-        PlayerInteractionManager.heldObject = null;
-
         placedPlateInSink = true; //player has placed plate in sink
         holdingDirtyPlate = false;
         PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanWashPlate;
@@ -175,7 +172,7 @@ public class SinkInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerInteractionManager.heldObject)
+        if (PlayerInteractionManager.detectedObject)
         {
 
             CheckForWashingCriteria();
@@ -189,7 +186,7 @@ public class SinkInteraction : MonoBehaviour
     //changes state of player accordingly
     public void CheckForWashingCriteria()
     {
-        if (PlayerInteractionManager.heldObject.tag == "DirtyPlate")
+        if (PlayerInteractionManager.detectedObject.tag == "DirtyPlate")
         {
             Debug.Log("SinkInteraction - Player is holding a dirty plate!");
             holdingDirtyPlate = true;

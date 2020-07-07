@@ -125,7 +125,6 @@ public class ShelfInteraction : MonoBehaviour
         {
             Debug.Log("ShelfInteraction: Spawned egg is true");
             PlayerInteractionManager.detectedObject = spawnedEggPrefab;
-            PlayerInteractionManager.heldObject = spawnedEggPrefab;
             spawnedChicken = false;
             spawnedCucumber = false;
             spawnedRice = false;
@@ -135,7 +134,6 @@ public class ShelfInteraction : MonoBehaviour
         {
             Debug.Log("ShelfInteraction: Spawned chicken is true");
             PlayerInteractionManager.detectedObject = spawnedChickenPrefab;
-            PlayerInteractionManager.heldObject = spawnedChickenPrefab;
             spawnedCucumber = false;
             spawnedRice = false;
             spawnedEgg = false;
@@ -145,7 +143,6 @@ public class ShelfInteraction : MonoBehaviour
         {
             Debug.Log("ShelfInteraction: Spawned cucumber is true");
             PlayerInteractionManager.detectedObject = spawnedCucumberPrefab;
-            PlayerInteractionManager.heldObject = spawnedCucumberPrefab;
             spawnedChicken = false;
             spawnedRice = false;
             spawnedEgg = false;
@@ -155,7 +152,6 @@ public class ShelfInteraction : MonoBehaviour
         {
             Debug.Log("ShelfInteraction: Spawned rice is true");
             PlayerInteractionManager.detectedObject = spawnedRicePrefab;
-            PlayerInteractionManager.heldObject = spawnedRicePrefab;
             spawnedChicken = false;
             spawnedCucumber = false;
             spawnedEgg = false;
@@ -171,7 +167,7 @@ public class ShelfInteraction : MonoBehaviour
         {
             //player in shelf zone, cannot drop anything here
             Debug.Log("ShelfInteraction - Player is in the shelf zone!");
-            if (PlayerInteractionManager.IsInventoryFull())
+            if (PlayerInteractionManager.IsInventoryFull() && PlayerInteractionManager.playerState != PlayerInteractionManager.PlayerState.HoldingCustomer)
             {
                 //if inventory full, then set state to default
                 PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;

@@ -31,4 +31,18 @@ public class EventManager : MonoBehaviour
 
     }
 
+
+    public delegate void CustomerHeld();
+    public static event CustomerHeld CustomersPickedUp;
+
+    public static void CallCustomersPickedUpEvent()
+    {
+        if (CustomersPickedUp != null)
+        {
+            Debug.Log("Table is occupied, GuestsSeated event called");
+            CustomersPickedUp();
+        }
+
+    }
+
 }
