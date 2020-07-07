@@ -11,9 +11,10 @@ public class TableScript : MonoBehaviour
     private Collider tableTriggerArea;
 
     //method to find seats and seat customers
-    public string chairTag = "Chair", customerTag = "Customer";
-    public List<GameObject> chairs = new List<GameObject>();
-    public List<GameObject> customers = new List<GameObject>();
+    [SerializeField] private string chairTag = "Chair", customerTag = "Customer";
+
+    [HideInInspector] public List<GameObject> chairs = new List<GameObject>();
+    [HideInInspector] public List<GameObject> customers = new List<GameObject>();
 
 
     void Start()

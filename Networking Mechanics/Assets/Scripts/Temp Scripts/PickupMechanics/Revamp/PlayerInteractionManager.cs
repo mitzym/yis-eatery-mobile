@@ -198,7 +198,9 @@ public class PlayerInteractionManager : MonoBehaviour
                 washInteraction.WashDirtyPlate();
                 break;
 
-
+            default:
+                Debug.Log("default");
+                break;
         }
     }
 
