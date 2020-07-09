@@ -6,20 +6,32 @@ using UnityEngine;
 
 public class TableScript : MonoBehaviour
 {
-    [HideInInspector, Range(0, 6)] public int numSeats = 0;
-    private int numSeated = 0;
+    [HideInInspector, Range(0, 6)] public int numSeats = 0; //number of seats the table has
+    private int numSeated = 0; //number of customers seated at table
 
-    //method to find seated customer prefabs
+    [SerializeField] private TableFeedback tableFeedbackScript;
+    [SerializeField] private CustomerPatience patienceScript;
+
+    //customer-related fields
     [SerializeField] private string customerTag = "Customer";
-    [SerializeField] private List<GameObject> customers = new List<GameObject>();
-    public List<GameObject> Customers
-    {
-        get { return customers; }
-        private set { customers = value; }
-    }
-    public GameObject dirtyDishPrefab;
+    [SerializeField] private List<Transform> seatPositions = new List<Transform>();
+    [SerializeField] private Vector2 minAndMaxOrderGenTime = new Vector2(3f, 5f);
 
-    public TableFeedback tableFeedbackScript;
+    //prefabs required
+    public GameObject dirtyDishPrefab;
+    public GameObject customerSeatedPrefab;
+
+
+    //list of customers that are seated at table
+    private List<GameObject> customersSeated = new List<GameObject>();
+    public List<GameObject> CustomersSeated
+    {
+        get { return customersSeated; }
+        private set { customersSeated = value; }
+    }
+
+
+    [HideInInspector] public bool isTableDirty = false;
 
 
     void Start()
@@ -36,13 +48,8 @@ public class TableScript : MonoBehaviour
         */
 
         //update the number of seats the table has
-        numSeats = customers.Count;
+        numSeats = seatPositions.Count;
 
-        //disable all customers in thehierarchy at the start of the game
-        foreach(GameObject customer in customers)
-        {
-            customer.SetActive(false);
-        }
     }
 
 
@@ -111,28 +118,74 @@ public class TableScript : MonoBehaviour
     }
 
 
-    //position 1 guest at every seat, then call the method on the customer to manage their sitting animation
+    //instantiate 1 customer at every seat, add them to a list, then call the method on the customer to manage their sitting animation + order
     public void SeatGuests(int numGuests)
     {
         Debug.Log("Guests are being seated");
+        
         //call the seated event
-
         for (int i = 0; i < numGuests; i++)
-        {   
-            //make customers visisble
-            customers[i].SetActive(true);
+        {
+            //instantiate customer and get its script
+            GameObject newSittingCustomer = Instantiate(customerSeatedPrefab, seatPositions[i].localPosition, seatPositions[i].localRotation).gameObject;
+            CustomerBehaviour_Seated newCustomerScript = newSittingCustomer.GetComponent<CustomerBehaviour_Seated>();
 
-            //animate customers
-            Debug.Log("Animate the customers");
+            //assign this table to the customer, get it to generate an order + animate it sitting
+            newCustomerScript.AssignTableScript(this);
+            newCustomerScript.GenerateOrder();
+            newCustomerScript.SitAndBrowseMenu();
+
+            //add customer to list of customers seated at table
+            if (newCustomerScript.CustomersOrder != null)
+            {
+                customersSeated.Add(newSittingCustomer);
+            }
+            else
+            {
+                Debug.Log("tried to add customer to list, but customer's order was null");
+            }
         }
 
         numSeated = numGuests;
+        Debug.Log("numGuests: " + numSeated + ", customersSeated: " + customersSeated.Count);
+
+        //after a random amount of time, call a server to take their order
+        Invoke("ReadyToOrder", Random.Range(minAndMaxOrderGenTime.x, minAndMaxOrderGenTime.y));
+
     }
 
 
-    //call this method when the table has no guests seated at it
-    public void EmptyTable(bool isTableDirty)
+
+    //enable the ui and start the patience meter.
+    public void ReadyToOrder()
     {
+        tableFeedbackScript.ToggleOrderIcon(true);
+        patienceScript.StartPatienceMeter(CustomerPatienceStats.customerPatience_TakeOrder, EmptyTable);
+    }
+
+
+    public bool CheckIfAllFinishedEating()
+    {
+        foreach(GameObject customer in customersSeated)
+        {
+            CustomerBehaviour_Seated customerScript = customer.GetComponent<CustomerBehaviour_Seated>();
+
+            if (!customerScript.FinishedEating)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+
+    //call this method when the table has no guests seated at it
+    public void EmptyTable()
+    {
+        tableFeedbackScript.ToggleOrderIcon(false);
+
         if (isTableDirty)
         {
             Debug.Log("Table needs to be cleared");
@@ -140,6 +193,13 @@ public class TableScript : MonoBehaviour
             //spawn dirty dishes on table
             SpawnDirtyDishes(numSeated);
 
+        }
+
+        //animate customers leaving
+        foreach(GameObject customer in customersSeated)
+        {
+            CustomerBehaviour_Seated customerScript = customer.GetComponent<CustomerBehaviour_Seated>();
+            customerScript.LeaveRestaurant();
         }
 
     }

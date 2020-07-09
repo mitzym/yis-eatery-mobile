@@ -81,7 +81,8 @@ public class CustomerPatienceStats
     public static float customerPatience_Queue = GameBalanceFormulae.customerPatience_base_Queue;
     public static float customerPatience_TakeOrder = GameBalanceFormulae.customerPatience_base_TakeOrder;
     public static float customerPatience_FoodWait = GameBalanceFormulae.customerPatience_base_FoodWait;
-    
+    public static float customerEatingDuration = 5f;
+
     public static void UpdateStats()
     {
         customerPatience_General = GameBalanceFormulae.customerPatience_formula_General(GameBalanceFormulae.customerPatience_base_General, LevelStats.Level);

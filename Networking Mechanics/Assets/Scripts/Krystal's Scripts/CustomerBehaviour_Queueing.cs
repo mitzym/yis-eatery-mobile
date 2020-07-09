@@ -88,7 +88,7 @@ public class CustomerBehaviour_Queueing : CustomerBehaviour
         TriggerCustomerCollider(true, true);
 
         //enable the patience meter
-        TriggerPatienceMeter(true, CustomerWaitsTooLong);
+        TriggerPatienceMeter(true, CustomerPatienceStats.customerPatience_Queue, CustomerWaitsTooLong);
 
 
     }

@@ -5,6 +5,8 @@ using UnityEngine.PlayerLoop;
 
 public class CustomerSpawn : MonoBehaviour
 {
+    [SerializeField] private bool customerSpawnDebuggingMode = false;
+
     [SerializeField] private GameObject spawnArea, waitingArea;
     public numGuestsSpawnRates[] spawnRates;
 
@@ -44,18 +46,29 @@ public class CustomerSpawn : MonoBehaviour
         //if the number of customers in the waiting area is below the max num of customers, 
         if(currentNumWaitingCustomers < maxGroupsOfCustomersInWaitingArea)
         {
-            //update the amount of time since the last customer group was spawned
-            timeSinceLastSpawn += Time.deltaTime;
-
-            //check that the last customer spawned at least spawnFrequency seconds ago
-            if (timeSinceLastSpawn > spawnFrequency)
+            if (!customerSpawnDebuggingMode)
             {
-                //call the spawn coroutine
-                StartCoroutine(SpawnAndCheck());
+                //update the amount of time since the last customer group was spawned
+                timeSinceLastSpawn += Time.deltaTime;
 
-                //reset the time since the last customer group was spawned
-                timeSinceLastSpawn = 0;
+                //check that the last customer spawned at least spawnFrequency seconds ago
+                if (timeSinceLastSpawn > spawnFrequency)
+                {
+                    //call the spawn coroutine
+                    StartCoroutine(SpawnAndCheck());
+
+                    //reset the time since the last customer group was spawned
+                    timeSinceLastSpawn = 0;
+                }
+            } else
+            {
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    //call the spawn coroutine
+                    StartCoroutine(SpawnAndCheck());
+                }
             }
+            
         }
 
 

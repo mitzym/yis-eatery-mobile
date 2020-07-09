@@ -15,13 +15,13 @@ public class CustomerBehaviour : MonoBehaviour
     
 
     //Patience Meter is started / stopped, depending on the bool passed into it
-    public void TriggerPatienceMeter(bool startPatience, Action callback = null)
+    public void TriggerPatienceMeter(bool startPatience, float waitTime = 0f, Action callback = null)
     {
         if(CustomerPatienceScript != null)
         {
             if (startPatience)
             {
-                CustomerPatienceScript.StartPatienceMeter(CustomerPatienceStats.customerPatience_Queue, callback);
+                CustomerPatienceScript.StartPatienceMeter(waitTime, callback);
             }
             else
             {
