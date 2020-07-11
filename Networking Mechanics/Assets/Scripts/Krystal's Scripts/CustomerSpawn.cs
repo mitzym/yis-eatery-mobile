@@ -46,6 +46,8 @@ public class CustomerSpawn : MonoBehaviour
         //if the number of customers in the waiting area is below the max num of customers, 
         if(currentNumWaitingCustomers < maxGroupsOfCustomersInWaitingArea)
         {
+            //if we're not in debugging mode, spawn customers every few seconds. 
+            //If not, spawn customers only when the user presses 'P'
             if (!customerSpawnDebuggingMode)
             {
                 //update the amount of time since the last customer group was spawned
@@ -60,7 +62,8 @@ public class CustomerSpawn : MonoBehaviour
                     //reset the time since the last customer group was spawned
                     timeSinceLastSpawn = 0;
                 }
-            } else
+            } 
+            else
             {
                 if (Input.GetKeyDown(KeyCode.P))
                 {

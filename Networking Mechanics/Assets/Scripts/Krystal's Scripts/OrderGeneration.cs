@@ -21,7 +21,7 @@ public class OrderGeneration : MonoBehaviour
     public static ChickenRice CreateNewOrder()
     {
         ChickenRice newOrder = new ChickenRice(Random.value > 0.5f, Random.value > 0.5f, Random.value > 0.5f);
-        //Debug.Log("Order generated. Does customer want chicken roasted? " + newOrder.RoastedChic + ". Rice plain? " + newOrder.RicePlain + ". Include egg? " + newOrder.HaveEgg + ". Include cucumber? " + newOrder.Cucumber);
+        Debug.Log("Order generated. Does customer want chicken roasted? " + newOrder.RoastedChic + ". Rice plain? " + newOrder.RicePlain + ". Include egg? " + newOrder.HaveEgg + ". Include cucumber? " + newOrder.Cucumber);
 
         return newOrder;
     }
@@ -31,6 +31,7 @@ public class OrderGeneration : MonoBehaviour
 public class ChickenRice
 {
     private bool cucumber = true;
+    private string chickenRiceLabel = null;
 
     #region Getters and Setters
     public bool RoastedChic {get; set;}
@@ -41,6 +42,12 @@ public class ChickenRice
         get { return cucumber; }
         private set { cucumber = value; }
     }
+    /*
+    public string ChickenRiceLabel
+    {
+        get { return chickenRiceLabel; }
+        private set { chickenRiceLabel = value; }
+    }*/
     #endregion
 
 

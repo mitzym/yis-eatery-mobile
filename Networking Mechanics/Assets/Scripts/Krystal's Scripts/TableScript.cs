@@ -31,6 +31,15 @@ public class TableScript : MonoBehaviour
     }
 
 
+    //list of orders of customers that are seated at table
+    private List<ChickenRice> tableOrders = new List<ChickenRice>();
+    public List<ChickenRice> TableOrders
+    {
+        get { return tableOrders; }
+        private set { tableOrders = value; }
+    }
+
+
     [HideInInspector] public bool isTableDirty = false;
 
 
@@ -127,18 +136,17 @@ public class TableScript : MonoBehaviour
         for (int i = 0; i < numGuests; i++)
         {
             //instantiate customer and get its script
-            GameObject newSittingCustomer = Instantiate(customerSeatedPrefab, seatPositions[i].localPosition, seatPositions[i].localRotation).gameObject;
+            GameObject newSittingCustomer = Instantiate(customerSeatedPrefab, seatPositions[i].position, seatPositions[i].rotation).gameObject;
             CustomerBehaviour_Seated newCustomerScript = newSittingCustomer.GetComponent<CustomerBehaviour_Seated>();
 
-            //assign this table to the customer, get it to generate an order + animate it sitting
-            newCustomerScript.AssignTableScript(this);
-            newCustomerScript.GenerateOrder();
-            newCustomerScript.SitAndBrowseMenu();
+            //animate customer sitting, assign this table to the customer, and get it to generate an order
+            newCustomerScript.CustomerJustSeated(this);
 
-            //add customer to list of customers seated at table
+            //add customer and their to list of customers seated at table
             if (newCustomerScript.CustomersOrder != null)
             {
                 customersSeated.Add(newSittingCustomer);
+                tableOrders.Add(newCustomerScript.CustomersOrder);
             }
             else
             {
@@ -160,32 +168,26 @@ public class TableScript : MonoBehaviour
     public void ReadyToOrder()
     {
         tableFeedbackScript.ToggleOrderIcon(true);
-        patienceScript.StartPatienceMeter(CustomerPatienceStats.customerPatience_TakeOrder, EmptyTable);
+        patienceScript.StartPatienceMeter(CustomerPatienceStats.customerPatience_TakeOrder, OrderNotTaken);
     }
 
 
-    public bool CheckIfAllFinishedEating()
+    //call this method when customer waits too long for their order
+    public void OrderNotTaken()
     {
-        foreach(GameObject customer in customersSeated)
-        {
-            CustomerBehaviour_Seated customerScript = customer.GetComponent<CustomerBehaviour_Seated>();
+        //disable the order icon
+        tableFeedbackScript.ToggleOrderIcon(false);
+        isTableDirty = false; 
 
-            if (!customerScript.FinishedEating)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        //clear the table of customers and have them leave angrily
+        EmptyTable(true);
     }
 
 
 
     //call this method when the table has no guests seated at it
-    public void EmptyTable()
+    public void EmptyTable(bool isCustomerAngry = false)
     {
-        tableFeedbackScript.ToggleOrderIcon(false);
-
         if (isTableDirty)
         {
             Debug.Log("Table needs to be cleared");
@@ -196,12 +198,11 @@ public class TableScript : MonoBehaviour
         }
 
         //animate customers leaving
-        foreach(GameObject customer in customersSeated)
+        foreach (GameObject customer in customersSeated)
         {
             CustomerBehaviour_Seated customerScript = customer.GetComponent<CustomerBehaviour_Seated>();
-            customerScript.LeaveRestaurant();
+            customerScript.LeaveRestaurant(isCustomerAngry);
         }
-
     }
 
 
@@ -210,6 +211,24 @@ public class TableScript : MonoBehaviour
     {
         Debug.Log("Spawn " + numDishes + " dirty dishes");
         //--------------------------------------------------------------------------------------------------------------------------add function later
+    }
+
+
+
+    //check whether all customers at the table are done eating
+    public bool CheckIfAllFinishedEating()
+    {
+        foreach (GameObject customer in customersSeated)
+        {
+            CustomerBehaviour_Seated customerScript = customer.GetComponent<CustomerBehaviour_Seated>();
+
+            if (!customerScript.FinishedEating)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 

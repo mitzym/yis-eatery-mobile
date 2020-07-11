@@ -44,7 +44,7 @@ public class CustomerPatience : MonoBehaviour
 
 
     //public method to call to start coroutine
-    public void StartPatienceMeter(float totalPatience, Action callback)
+    public void StartPatienceMeter(float totalPatience, Action callback = null)
     {
         if (isCoroutineRunning)
         {
@@ -78,7 +78,7 @@ public class CustomerPatience : MonoBehaviour
 
     //method that updates customers' patience meter, then, when patience runs out, calls the method (callback) passed into it 
     //understanding callbacks: https://stackoverflow.com/questions/54772578/passing-a-function-as-a-function-parameter/54772707
-    private IEnumerator UpdatePatienceMeter(float totalPatience, Action callback)
+    private IEnumerator UpdatePatienceMeter(float totalPatience, Action callback = null)
     {
         float currentPatience = totalPatience;
 
@@ -95,8 +95,11 @@ public class CustomerPatience : MonoBehaviour
         }
 
         Debug.Log("Calling the impatient method");
-        callback?.Invoke();
-
+        if(callback != null)
+        {
+            callback?.Invoke();
+        }
+        
         //disable the image
         patienceMeterImg.enabled = false;
 

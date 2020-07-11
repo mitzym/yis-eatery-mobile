@@ -16,6 +16,25 @@ public class TableFeedback : MonoBehaviour
     [SerializeField] private string insufficientSeats = "Not enough seats";
 
 
+    #region Debugging
+    /*
+    private bool tempBool = true;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            NotEnoughSeats();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            ToggleOrderIcon(tempBool);
+            tempBool = !tempBool;
+        }
+    }
+    */
+    #endregion
+
     private void Start()
     {
         //deactivating all icons / feedback
@@ -29,7 +48,7 @@ public class TableFeedback : MonoBehaviour
     {
         Debug.Log("Table feedback: Not enough seats");
 
-        StartCoroutine(FadeInFadeOutText(insufficientSeats, true, true));
+        StartCoroutine(FadeInFadeOutText(insufficientSeats));
     }
 
 
@@ -52,7 +71,7 @@ public class TableFeedback : MonoBehaviour
     }
 
 
-    IEnumerator FadeInFadeOutText(string _text, bool _fadeIn, bool _fadeOut)
+    IEnumerator FadeInFadeOutText(string _text, bool _fadeIn = true, bool _fadeOut = true)
     {
         word_tmpObj.text = _text;
         word_tmpObj.gameObject.SetActive(true);
@@ -63,26 +82,29 @@ public class TableFeedback : MonoBehaviour
         if (_fadeIn)
         {
             wordAnim.SetBool("fadeIn", true);
+            Debug.Log("fade in bool set to true");
+            yield return null;
 
-            while (word_tmpObj.fontMaterial.color.a < 1)
-            {
-                Debug.Log("textmeshpro alpha: " + word_tmpObj.fontMaterial.color.a);
-                yield return new WaitForSeconds(0.2f);
-            }
+            Debug.Log("fade in clip length: " + wordAnim.GetCurrentAnimatorStateInfo(0).length);
+
+            yield return new WaitForSeconds(wordAnim.GetCurrentAnimatorStateInfo(0).length);
+
         }
 
         if (_fadeOut)
         {
             wordAnim.SetBool("fadeIn", false);
+            Debug.Log("fade in bool set to false");
+            yield return null;
 
-            while (word_tmpObj.fontMaterial.color.a > 0)
-            {
-                Debug.Log("textmeshpro alpha: " + word_tmpObj.fontMaterial.color.a);
-                yield return new WaitForSeconds(0.2f);
-            }
+            Debug.Log("fade out clip length: " + wordAnim.GetCurrentAnimatorStateInfo(0).length);
+
+            yield return new WaitForSeconds(wordAnim.GetCurrentAnimatorStateInfo(0).length);
+
         }
 
         word_tmpObj.gameObject.SetActive(false);
+        Debug.Log("set words to false");
 
         yield return null;
     }
