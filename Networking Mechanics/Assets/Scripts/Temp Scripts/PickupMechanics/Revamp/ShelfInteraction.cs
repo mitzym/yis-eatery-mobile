@@ -167,7 +167,7 @@ public class ShelfInteraction : MonoBehaviour
         {
             //player in shelf zone, cannot drop anything here
             Debug.Log("ShelfInteraction - Player is in the shelf zone!");
-            if (PlayerInteractionManager.IsInventoryFull() && PlayerInteractionManager.playerState != PlayerInteractionManager.PlayerState.HoldingCustomer)
+            if (PlayerInteractionManager.IsInventoryFull() && PlayerInteractionManager.CanChangePlayerState())
             {
                 //if inventory full, then set state to default
                 PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
@@ -179,7 +179,7 @@ public class ShelfInteraction : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (shelfDetected)
+        if (shelfDetected && PlayerInteractionManager.CanChangePlayerState())
         {
             //if player inventory is not full
             if (!PlayerInteractionManager.IsInventoryFull())
@@ -221,7 +221,7 @@ public class ShelfInteraction : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.tag == "ShelfZone")
+        if(other.tag == "ShelfZone" && PlayerInteractionManager.CanChangePlayerState())
         {
             Debug.Log("Player exited shelf zone!");
             if (PlayerInteractionManager.IsInventoryFull())

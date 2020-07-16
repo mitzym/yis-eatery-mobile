@@ -10,6 +10,7 @@ public class CustomerBehaviour : MonoBehaviour
 {
     [Header("Customer Feedback Scripts Variables")]
     [SerializeField] public CustomerAnimationManager CustomerAnimScript;
+    [SerializeField] public CustomerFeedback CustomerFeedbackScript;
     [SerializeField] public CustomerPatience CustomerPatienceScript;
     [SerializeField] private Collider CustomerCollider;
     

@@ -175,7 +175,7 @@ public class WashInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerInteractionManager.detectedObject)
+        if (PlayerInteractionManager.detectedObject && PlayerInteractionManager.CanChangePlayerState()) 
         {
             CheckForWashingCriteria();
         }

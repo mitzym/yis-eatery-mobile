@@ -431,6 +431,7 @@ GameObject:
   - component: {fileID: 1479643656}
   - component: {fileID: 1479643655}
   - component: {fileID: 1479643654}
+  - component: {fileID: 1479643657}
   m_Layer: 0
   m_Name: LevelStatsAnnouncer
   m_TagString: Untagged
@@ -476,6 +477,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1479643657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479643653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f4b708b399adc44a0e272ca9144c45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roastedPlain: {fileID: 2144616528253818311, guid: cb8bb636a367c004a94b884546d2fad7,
+    type: 3}
+  roastedPlain_egg: {fileID: 2144616528253818311, guid: 77cb67908a644ea4e9caec565a5964a5,
+    type: 3}
+  roastedBall: {fileID: 2144616528253818311, guid: 2f991ad22cacb2947835d55f49ca16ab,
+    type: 3}
+  roastedBall_egg: {fileID: 2144616528253818311, guid: 32293babf60bc564ab3a2d579d707673,
+    type: 3}
+  steamedPlain: {fileID: 2144616528253818311, guid: 12b08221aa439cc41b188bd1a0718638,
+    type: 3}
+  steamedPlain_egg: {fileID: 2144616528253818311, guid: 1aaa6f01220f10c428ab4291ae2f10b4,
+    type: 3}
+  steamedBall: {fileID: 2144616528253818311, guid: 620b99ec526530f48ba5cad7f59f0b90,
+    type: 3}
+  steamedBall_egg: {fileID: 2144616528253818311, guid: ae021acc71646a54bbb1caa2686cb704,
+    type: 3}
 --- !u!1 &1640471144
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,6 +595,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb1e4ae0b23c1314a8b9e2f6fa52b778, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debuggingMode: 1
+  sphereVisualisation: {fileID: 2510218185356314655}
   spawnArea: {fileID: 1977431548}
   waitingArea: {fileID: 2066399459}
   spawnRates:
@@ -585,7 +616,6 @@ MonoBehaviour:
   customerQueueingPrefab: {fileID: 4217755499028838569, guid: 570277c39e6c63242aaceef413f30529,
     type: 3}
   customerParent: {fileID: 1640471144}
-  sphereVisualisation: {fileID: 2510218185356314655}
   checkRad: 0.625
   spawnFrequency: 2
   customerMoveSpd: 0.05

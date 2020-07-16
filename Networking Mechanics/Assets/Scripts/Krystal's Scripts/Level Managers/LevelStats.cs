@@ -57,7 +57,7 @@ public class LevelStats : MonoBehaviour
     }
     #endregion
 
-    //updates level number, the minimum score required to pass, and the hgihest level they've reached.
+    //updates level number, the minimum score required to pass, and the highest level they've reached.
     public static void UpdateLevel()
     {
         Level++;
@@ -68,8 +68,6 @@ public class LevelStats : MonoBehaviour
             HighestLevel = Level;
         }
     }
-
-
 
 }
 
@@ -104,7 +102,6 @@ public class GameBalanceFormulae
     {
         return baseNum / levelNum;
     }
-
     public static float increasePassingScore_formula(float baseNum, float levelNum)
     {
         return baseNum * levelNum;

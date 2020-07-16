@@ -13,7 +13,7 @@ public class TableFeedback : MonoBehaviour
 
     [Header("text to display")]
     [SerializeField] private TextMeshProUGUI word_tmpObj; 
-    [SerializeField] private string insufficientSeats = "Not enough seats";
+    [SerializeField] private string insufficientSeats = "Not enough seats", tableOccupied = "Table occupied", handsFull = "Your hands are full!";
 
 
     #region Debugging
@@ -49,6 +49,22 @@ public class TableFeedback : MonoBehaviour
         Debug.Log("Table feedback: Not enough seats");
 
         StartCoroutine(FadeInFadeOutText(insufficientSeats));
+    }
+
+    //feedback that shows that the table is occupied and no customers can be seated there
+    public void TableOccupied()
+    {
+        Debug.Log("Table feedback: Not enough seats");
+
+        StartCoroutine(FadeInFadeOutText(tableOccupied));
+    }
+
+    //feedback that shows that the server's hands are too full to take the customers' order
+    public void HandsFullFeedback()
+    {
+        Debug.Log("Table feedback: Hands full");
+
+        StartCoroutine(FadeInFadeOutText(handsFull));
     }
 
 

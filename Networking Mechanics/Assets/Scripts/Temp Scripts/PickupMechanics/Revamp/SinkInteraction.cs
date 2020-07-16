@@ -200,7 +200,7 @@ public class SinkInteraction : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         //if it is the sink zone
-        if (other.tag == "SinkZone")
+        if (other.tag == "SinkZone" && PlayerInteractionManager.CanChangePlayerState())
         {
             Debug.Log("SinkInteraction - Player in sink zone!");
 
@@ -213,7 +213,7 @@ public class SinkInteraction : MonoBehaviour
             }
             //if player was washing plate, then if they enter the sink zone again they can resume
             //TODO: CHANGE TO ELSE
-            else if (stoppedWashingPlate || platesInSink != 0)
+            else if (stoppedWashingPlate || platesInSink != 0 && PlayerInteractionManager.CanChangePlayerState())
             {
                 Debug.Log("SinkInteraction - Player can resume washing plate!");
 
@@ -232,7 +232,7 @@ public class SinkInteraction : MonoBehaviour
     public void OnTriggerExit(Collider other)
     {
         //if exit sink zone
-        if (other.tag == "SinkZone")
+        if (other.tag == "SinkZone" && PlayerInteractionManager.CanChangePlayerState())
         {
             Debug.Log("SinkInteraction - Exited sink zone");
             showWashIcon = false;

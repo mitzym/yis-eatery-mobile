@@ -9,11 +9,11 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
 {
     private ChickenRice customersOrder = null;
     private TableScript tableSeatedAt = null;
-    private bool finishedEating;
+    private bool finishedEating = false;
 
-    [SerializeField] private GameObject orderIcon;
     [SerializeField] private GameObject dirtyDishPrefab;
-    [SerializeField] private Transform dishSpawnPoint;
+    [SerializeField] private Transform dishSpawnPoint, orderIconPos;
+    [SerializeField] private OrderGeneration orderGenerationScript;
 
     #region Getters and Setters
     public ChickenRice CustomersOrder
@@ -34,6 +34,16 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
         private set { finishedEating = value; }
     }
     #endregion
+
+    //before the customer is visible, make sure to...
+    private void Awake()
+    {
+        //disable the collider
+        TriggerCustomerCollider(false, true);
+
+        //ensure that the order icon is not visible
+        orderIconPos.gameObject.SetActive(false);
+    }
 
 
     //---------------------BEHAVIOUR WHEN SEATED---------------------
@@ -57,11 +67,12 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
     //generates and assigns an order to the customer
     public void GenerateOrder()
     {
-        customersOrder = OrderGeneration.CreateNewOrder();
+        customersOrder = orderGenerationScript.CreateNewOrder();
 
-        if(orderIcon != null)
+        if(customersOrder.OrderIcon != null)
         {
-            orderIcon.GetComponent<CustomerOrderIconCustomization>();
+            //instantiate the order icon as the child of the orderIconPos obj
+            Instantiate(customersOrder.OrderIcon, orderIconPos);
         }
         
     }
@@ -69,8 +80,15 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
     //after the customer's order has been taken, they will wait for their food
     public void DisplayOrderAndWait()
     {
+        //animate the customer sitting idly and waiting for their food
         Debug.Log("Displaying customer order");
         CustomerAnimScript.WaitForFoodAnim();
+
+        //display the customer's order
+        orderIconPos.gameObject.SetActive(true);
+
+        //enable their collider
+        TriggerCustomerCollider(true, true);
 
         //if the customer waits too long for their food, they will SitAngrily() will be called
         TriggerPatienceMeter(true, CustomerPatienceStats.customerPatience_FoodWait, SitAngrily);
@@ -81,6 +99,37 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
     public void SitAngrily()
     {
         Debug.Log("Sit angrily");
+    }
+
+
+    //check that the order being served to them is correct
+    public bool CheckOrder(GameObject servedFood)
+    {
+        OrderScript servedFoodScript = servedFood.GetComponent<OrderScript>();
+
+        Debug.Log("Checking if food served to customer is correct");
+
+        if(servedFoodScript.DishLabel == customersOrder.ChickenRiceLabel)
+        {
+            //stop customer's patience meter
+            TriggerPatienceMeter(false);
+
+            //move the dish from the player to the dishspawnpoint of the customer
+            servedFoodScript.ToggleIcon(false);
+            servedFood.transform.parent = dishSpawnPoint;
+            servedFood.transform.position = dishSpawnPoint.position;
+
+            //animate the customer eating
+            EatingFood();
+
+            return true;
+        }
+        else
+        { 
+            WrongCustomer();
+
+            return false;
+        }
     }
 
 
@@ -108,10 +157,14 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
     //customer has bee served the right food and is eating it
     public void EatingFood()
     {
+        //disable the order icon
+        orderIconPos.gameObject.SetActive(false);
+
         //declare that the table has been dirtied
         tableSeatedAt.isTableDirty = true;
 
         //enable eating animation
+        CustomerFeedbackScript.PlayEatingPFX();
         CustomerAnimScript.StartEatingAnim();
         Debug.Log("Animating customer eating food");
 
@@ -120,19 +173,35 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
 
     }
 
+
+    //customer has not been served the wrong food
+    public void WrongCustomer()
+    {
+        Debug.Log("wrong order!!!!!!!!");
+    }
+
+
     //function to call once customer finishes eating food
     public void CustomerFinishedFood()
     {
-        finishedEating = true;
-
-        //disable eating animation
-        CustomerAnimScript.StopEatingAnim();
-        Debug.Log("Customer is done eating food");
+        //remove the food in front of the customer
+        foreach (Transform child in dishSpawnPoint)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
 
         //Instantiate dirty dish in front of customer
         Instantiate(dirtyDishPrefab, dishSpawnPoint.position, dishSpawnPoint.localRotation);
         Debug.Log("Spawning dirty dishes");
 
+        finishedEating = true;
+
+        //disable eating animation
+        CustomerFeedbackScript.PlayEatingPFX(false);
+        CustomerAnimScript.StopEatingAnim();
+        Debug.Log("Customer is done eating food");
+
+        
         //all customers leave if they have all finished eating
         if (tableSeatedAt.CheckIfAllFinishedEating())
         {

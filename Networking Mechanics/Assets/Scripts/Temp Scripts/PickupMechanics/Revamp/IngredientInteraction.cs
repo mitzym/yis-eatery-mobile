@@ -126,7 +126,7 @@ public class IngredientInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       if(PlayerInteractionManager.detectedObject && PlayerInteractionManager.detectedObject.layer == 15)
+       if(PlayerInteractionManager.detectedObject && PlayerInteractionManager.detectedObject.layer == 15 && PlayerInteractionManager.CanChangePlayerState())
         {
             ingredientDetected = true;
         }
@@ -142,7 +142,7 @@ public class IngredientInteraction : MonoBehaviour
     //only works if the object detected by radar is an ingredient layer
     public void CheckIngredientCriteria()
     {
-        if (ingredientDetected)
+        if (ingredientDetected && PlayerInteractionManager.CanChangePlayerState())
         {
             //PICK UP CRITERIA
             //if inventory is not full, able to pick up
@@ -174,7 +174,7 @@ public class IngredientInteraction : MonoBehaviour
             }
         }
         //if there is no detected object + the player isn't holding a customer, player state returns to default
-        if (!PlayerInteractionManager.detectedObject && !WashInteraction.placedPlateInSink && PlayerInteractionManager.playerState != PlayerInteractionManager.PlayerState.HoldingCustomer)
+        if (!PlayerInteractionManager.detectedObject && !WashInteraction.placedPlateInSink && PlayerInteractionManager.CanChangePlayerState())
         {
             PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
         }
@@ -182,32 +182,39 @@ public class IngredientInteraction : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        //if enter the ingredient tray zone
-        if(other.tag == "IngredientTableZone")
+        if (PlayerInteractionManager.CanChangePlayerState())
         {
-            Debug.Log("IngredientInteraction - Near the ingredient tray!");
-            nearIngredientTray = true;
-        }
+            //if enter the ingredient tray zone
+            if (other.tag == "IngredientTableZone")
+            {
+                Debug.Log("IngredientInteraction - Near the ingredient tray!");
+                nearIngredientTray = true;
+            }
 
-        if(other.tag == "ShelfZone")
-        {
-            //if player is in shelf zone, they cannot drop ingredients
-            nearIngredientShelves = true;
+            if (other.tag == "ShelfZone")
+            {
+                //if player is in shelf zone, they cannot drop ingredients
+                nearIngredientShelves = true;
+            }
         }
+        
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if(other.tag == "IngredientTableZone")
+        if (PlayerInteractionManager.CanChangePlayerState())
         {
-            Debug.Log("IngredientInteraction - Exited ingredient tray!");
-            nearIngredientTray = false;
-        }
+            if (other.tag == "IngredientTableZone")
+            {
+                Debug.Log("IngredientInteraction - Exited ingredient tray!");
+                nearIngredientTray = false;
+            }
 
-        if (other.tag == "ShelfZone")
-        {
-            //if player is in shelf zone, they cannot drop ingredients
-            nearIngredientShelves = false;
+            if (other.tag == "ShelfZone")
+            {
+                //if player is in shelf zone, they cannot drop ingredients
+                nearIngredientShelves = false;
+            }
         }
     }
 }

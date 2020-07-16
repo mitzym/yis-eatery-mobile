@@ -6,11 +6,19 @@ public class CustomerFeedback : MonoBehaviour
 {
     [SerializeField] private ParticleSystem eating_PFX, angry_PFX, happy_PFX;
 
-    public void PlayEatingPFX()
+    public void PlayEatingPFX(bool play = true)
     {
         if(eating_PFX != null)
         {
-            eating_PFX.Play();
+            if (play)
+            {
+                eating_PFX.Play();
+            }
+            else
+            {
+                eating_PFX.Stop();
+            }
+            
         }
 
         Debug.Log("Eating pfx called");

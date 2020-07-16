@@ -4,11 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CustomerBehaviour_Queueing : CustomerBehaviour
 {
     [Header("Group Size Icon Variables")]
-    [SerializeField] private Text groupSizeText;
+    [SerializeField] private TextMeshProUGUI groupSizeText;
     [SerializeField] private GameObject groupSizeIcon;
 
     //group size variables
@@ -104,16 +105,6 @@ public class CustomerBehaviour_Queueing : CustomerBehaviour
     public void CustomerWaitsTooLong()
     {
         Debug.Log("Customer impatient method successfully invoked. Customer waited too long");
-    }
-
-
-
-
-
-    //------------------------------------------------------METHOD TO SEAT GROUP OF CUSTOMERS-----------------------------------------------------------------
-    public void CheckNumSeats()
-    {
-        Debug.Log("Check whether the number of seats at the table is sufficient");
     }
 
 

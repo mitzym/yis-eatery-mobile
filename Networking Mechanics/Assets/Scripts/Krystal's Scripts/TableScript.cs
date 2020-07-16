@@ -10,17 +10,21 @@ public class TableScript : MonoBehaviour
     private int numSeated = 0; //number of customers seated at table
 
     [SerializeField] private TableFeedback tableFeedbackScript;
+    public TableFeedback TableFeedbackScript
+    {
+        get { return tableFeedbackScript; }
+        private set { tableFeedbackScript = value; }
+    }
     [SerializeField] private CustomerPatience patienceScript;
 
     //customer-related fields
-    [SerializeField] private string customerTag = "Customer";
     [SerializeField] private List<Transform> seatPositions = new List<Transform>();
     [SerializeField] private Vector2 minAndMaxOrderGenTime = new Vector2(3f, 5f);
 
     //prefabs required
     public GameObject dirtyDishPrefab;
     public GameObject customerSeatedPrefab;
-
+    [SerializeField] private Transform seatedCustomerParent;
 
     //list of customers that are seated at table
     private List<GameObject> customersSeated = new List<GameObject>();
@@ -32,6 +36,7 @@ public class TableScript : MonoBehaviour
 
 
     //list of orders of customers that are seated at table
+    [SerializeField] private string takeOrderLayer = "Ordering";
     private List<ChickenRice> tableOrders = new List<ChickenRice>();
     public List<ChickenRice> TableOrders
     {
@@ -48,13 +53,9 @@ public class TableScript : MonoBehaviour
         //add current table to table collider manager list
         TableColliderManager.AddTableToTableColliderManager(gameObject);
 
-        /*
-        //get all the customers childed to the table by identifying them via their tag
-        if(customerTag != null)
-        {
-            FindObjectwithTag(customerTag, customers);
-        }
-        */
+        //clear the customer and orders lists
+        customersSeated.Clear();
+        tableOrders.Clear();
 
         //update the number of seats the table has
         numSeats = seatPositions.Count;
@@ -62,40 +63,17 @@ public class TableScript : MonoBehaviour
     }
 
 
-
-    #region Find Objects and Add Them to Lists
-    //-----------------------------------------FIGURE OUT THE NUMBER OF SEATS AT THE TABLE
-    //get all children of the table
-    public void FindObjectwithTag(string tag, List<GameObject> list)
-    {
-        list.Clear();
-        Transform parent = transform;
-        GetChildObject(parent, tag, list);
-    }
-
-
-    //check the tags all the children of the table. Add all children tagged tag to a list.
-    public void GetChildObject(Transform parent, string tag, List<GameObject> list)
-    {
-        for (int i = 0; i < parent.childCount; i++)
-        {
-            Transform child = parent.GetChild(i);
-
-            if (child.CompareTag(tag))
-            {
-                list.Add(child.gameObject);
-            }
-        }
-    }
-
-#endregion
-
-
-
     //-------------------------------------------------------- METHODS RELATED TO CUSTOMERS INTERACTING WITH TABLE AND SEATS
     //check number of customers
     public bool CheckSufficientSeats(int numGuests)
     {
+        if (customersSeated.Count > 0)
+        {
+            Debug.Log("CustomersSeated.Count: " + customersSeated.Count);
+            tableFeedbackScript.TableOccupied();
+            return false;
+        }
+
         Debug.Log("checking if there are sufficient seats");
 
         if (numGuests <= numSeats)
@@ -137,6 +115,7 @@ public class TableScript : MonoBehaviour
         {
             //instantiate customer and get its script
             GameObject newSittingCustomer = Instantiate(customerSeatedPrefab, seatPositions[i].position, seatPositions[i].rotation).gameObject;
+            newSittingCustomer.transform.parent = seatedCustomerParent;
             CustomerBehaviour_Seated newCustomerScript = newSittingCustomer.GetComponent<CustomerBehaviour_Seated>();
 
             //animate customer sitting, assign this table to the customer, and get it to generate an order
@@ -167,8 +146,42 @@ public class TableScript : MonoBehaviour
     //enable the ui and start the patience meter.
     public void ReadyToOrder()
     {
+        //move the table collider to a separate layer
+        TableColliderManager.ToggleTableDetection(true, this.gameObject, takeOrderLayer);
+
+        //enable the UI
         tableFeedbackScript.ToggleOrderIcon(true);
+
+        //animate the customers ordering food
+        foreach (GameObject customer in customersSeated)
+        {
+            customer.GetComponent<CustomerBehaviour_Seated>().CustomerAnimScript.OrderAnim();
+        }
+
+        //start the patience script
         patienceScript.StartPatienceMeter(CustomerPatienceStats.customerPatience_TakeOrder, OrderNotTaken);
+    }
+
+
+    public void TakeOrder()
+    {
+        //stop the patience script
+        patienceScript.StopPatienceMeter();
+
+        //disable the order icon UI
+        tableFeedbackScript.ToggleOrderIcon(false);
+
+        //move the table collider back to the environment layer
+        TableColliderManager.ToggleTableDetection(false, this.gameObject);
+
+        //pass all the orders to the kitchen
+        Debug.Log("All orders: " + tableOrders);
+
+        //display the customer's order and make them wait
+        foreach (GameObject customer in customersSeated)
+        {
+            customer.GetComponent<CustomerBehaviour_Seated>().DisplayOrderAndWait();
+        }
     }
 
 
@@ -188,31 +201,17 @@ public class TableScript : MonoBehaviour
     //call this method when the table has no guests seated at it
     public void EmptyTable(bool isCustomerAngry = false)
     {
-        if (isTableDirty)
-        {
-            Debug.Log("Table needs to be cleared");
-
-            //spawn dirty dishes on table
-            SpawnDirtyDishes(numSeated);
-
-        }
-
         //animate customers leaving
         foreach (GameObject customer in customersSeated)
         {
             CustomerBehaviour_Seated customerScript = customer.GetComponent<CustomerBehaviour_Seated>();
             customerScript.LeaveRestaurant(isCustomerAngry);
         }
+
+        //clear the lists
+        customersSeated.Clear();
+        tableOrders.Clear();
     }
-
-
-    //function to spawn dirty dishes
-    public void SpawnDirtyDishes(int numDishes)
-    {
-        Debug.Log("Spawn " + numDishes + " dirty dishes");
-        //--------------------------------------------------------------------------------------------------------------------------add function later
-    }
-
 
 
     //check whether all customers at the table are done eating

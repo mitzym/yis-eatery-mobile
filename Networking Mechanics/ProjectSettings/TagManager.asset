@@ -45,6 +45,7 @@ TagManager:
   - Customer
   - Chair
   - Table
+  - Dish
   layers:
   - Default
   - TransparentFX
@@ -66,8 +67,8 @@ TagManager:
   - Pickuppable
   - Floor
   - Table
-  - Customers
-  - 
+  - Queue
+  - Ordering
   - 
   - 
   - 

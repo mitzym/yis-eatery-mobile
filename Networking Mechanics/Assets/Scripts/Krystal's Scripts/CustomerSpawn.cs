@@ -1,17 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
 public class CustomerSpawn : MonoBehaviour
 {
-    [SerializeField] private bool customerSpawnDebuggingMode = false;
+    [Header("Debugging Settings")]
+    [SerializeField] private bool debuggingMode = false;
+    [SerializeField] private GameObject sphereVisualisation;
 
-    [SerializeField] private GameObject spawnArea, waitingArea;
+    [Header("Spawn-related fields")]
+    [SerializeField] private GameObject spawnArea;
+    [SerializeField] private GameObject waitingArea;
     public numGuestsSpawnRates[] spawnRates;
 
     [SerializeField] private string customerTag = "Customer";
-    [SerializeField] private GameObject customerQueueingPrefab, customerParent, sphereVisualisation;
+    [SerializeField] private GameObject customerQueueingPrefab, customerParent;
     [SerializeField] private float checkRad = 0.625f, spawnFrequency = 15f, customerMoveSpd = 0.05f, maxGroupsOfCustomersInWaitingArea = 6;
 
     private float timeSinceLastSpawn = 0f, currentNumWaitingCustomers = 0f;
@@ -48,7 +53,7 @@ public class CustomerSpawn : MonoBehaviour
         {
             //if we're not in debugging mode, spawn customers every few seconds. 
             //If not, spawn customers only when the user presses 'P'
-            if (!customerSpawnDebuggingMode)
+            if (!debuggingMode)
             {
                 //update the amount of time since the last customer group was spawned
                 timeSinceLastSpawn += Time.deltaTime;

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +12,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerInteractionManager : MonoBehaviour
 {
-    [SerializeField] private string customerTag = "Customer";
+    [SerializeField] private string customerTag = "Customer", dishTag = "Dish";
+    [SerializeField] private string queueingCustomerLayer = "Queue", takeOrderLayer = "Ordering";
 
     //RAYCAST VARIABLES
     public float raycastLength = 2f; //how far the raycast extends
@@ -70,7 +72,10 @@ public class PlayerInteractionManager : MonoBehaviour
 
         //Customer Interaction
         CanPickUpCustomer,
-        HoldingCustomer
+        HoldingCustomer,
+        CanTakeOrder,
+        CanPickUpDish,
+        HoldingOrder
     }
 
     public static PlayerState playerState;
@@ -130,7 +135,7 @@ public class PlayerInteractionManager : MonoBehaviour
 
             //draw a yellow ray from object position (origin) forward to the distance of the cast 
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * raycastLength, Color.yellow);
-            Debug.Log("PlayerInteractionManager - Object has been found! \n Object tag is: " + hit.collider.tag);
+            //Debug.Log("PlayerInteractionManager - Object has been found! \n Object tag is: " + hit.collider.tag);
             
             //if nothing in inventory
             if(objectsInInventory.Count == 0)
@@ -138,15 +143,21 @@ public class PlayerInteractionManager : MonoBehaviour
                 //set hit object as detectedobject
                 detectedObject = hit.collider.gameObject;
 
-                //If the detected obj is a customer, change the player state
-                if (hit.collider.gameObject.CompareTag("Customer"))
+                //If the detected obj is a customer that is queueing, change the player state to canpickupcustomer
+                if (hit.collider.gameObject.CompareTag(customerTag) && hit.collider.gameObject.layer == LayerMask.NameToLayer(queueingCustomerLayer))
                 {
                     playerState = PlayerState.CanPickUpCustomer;
+
+                }
+                else if (hit.collider.gameObject.CompareTag(dishTag)) //if the detected obj is a dish, change the player state to canpickupobj
+                {
+                    playerState = PlayerState.CanPickUpDish;
+
                 }
             }
             else
             {
-                if(playerState == PlayerState.HoldingCustomer)
+                if(!CanChangePlayerState())
                 {
                     //set hit object as detectedobject
                     detectedObject = hit.collider.gameObject;
@@ -159,10 +170,17 @@ public class PlayerInteractionManager : MonoBehaviour
                 }
 
             }
-            
 
-            //returns the detectedobject's layer (number) as a name
-            //Debug.Log("PlayerInteractionManager - Detected object layer: " + LayerMask.LayerToName(detectedObject.layer) + " of layer " + detectedObject.layer);
+            //if the player is looking at a table ready to order, set their state to cantakeorder
+            if(hit.collider.gameObject.layer == LayerMask.NameToLayer(takeOrderLayer))
+            {
+                playerState = PlayerState.CanTakeOrder;
+
+                //set hit object as detectedobject
+                detectedObject = hit.collider.gameObject;
+                Debug.Log("detected object: " + detectedObject.tag);
+            }
+            
         }
         else
         {
@@ -219,14 +237,28 @@ public class PlayerInteractionManager : MonoBehaviour
                 washInteraction.WashDirtyPlate();
                 break;
 
+            //customer interaction states
             case PlayerState.CanPickUpCustomer:
-                Debug.Log("PlayerInteractionManager - Player state is currently: " + playerState);
                 customerInteraction.PickCustomerUp(detectedObject, objectsInInventory, attachPoint);
                 break;
 
             case PlayerState.HoldingCustomer:
-                Debug.Log("Holding customer player state");
                 customerInteraction.SeatCustomer(objectsInInventory, detectedObject);
+                break;
+
+            case PlayerState.CanTakeOrder:
+                Debug.Log("can take order player state");
+                customerInteraction.CheckHandsEmpty(objectsInInventory, detectedObject);
+                break;
+
+            case PlayerState.CanPickUpDish:
+                Debug.Log("dish can be picked up");
+                customerInteraction.PickOrderUp(detectedObject, objectsInInventory, attachPoint);
+                break;
+
+            case PlayerState.HoldingOrder:
+                Debug.Log("Holding order player state");
+                customerInteraction.CheckCanPutDownOrder(objectsInInventory, detectedObject, dropOffPoint);
                 break;
 
             default:
@@ -263,5 +295,17 @@ public class PlayerInteractionManager : MonoBehaviour
         }
     }
 
+
+    public static bool CanChangePlayerState()
+    {
+        if(playerState == PlayerState.HoldingCustomer || playerState == PlayerState.HoldingOrder)
+        {
+            return false;
+        } 
+        else
+        {
+            return true;
+        }
+    }
 
 }
