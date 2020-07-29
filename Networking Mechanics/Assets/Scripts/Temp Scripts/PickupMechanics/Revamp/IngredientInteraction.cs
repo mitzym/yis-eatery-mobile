@@ -150,7 +150,7 @@ public class IngredientInteraction : MonoBehaviour
             {
                 print("IngredientInteraction - Can pick up ingredient!");
                 //Switch the state
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanPickUpIngredient;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanPickUpIngredient);
             }
 
             //DROP CRITERIA
@@ -170,26 +170,38 @@ public class IngredientInteraction : MonoBehaviour
 
                 //switch the state
                 if(!nearIngredientShelves)
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanDropIngredient;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanDropIngredient);
             }
         }
         //if there is no detected object + the player isn't holding a customer, player state returns to default
+<<<<<<< Updated upstream
         if (!PlayerInteractionManager.detectedObject && !WashInteraction.placedPlateInSink && PlayerInteractionManager.playerState != PlayerInteractionManager.PlayerState.HoldingCustomer)
+=======
+        if (!PlayerInteractionManager.detectedObject && !WashInteraction.placedPlateInSink)
+>>>>>>> Stashed changes
         {
-            PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
+            PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default);
         }
     }
 
     public void OnTriggerEnter(Collider other)
     {
         //if enter the ingredient tray zone
+<<<<<<< Updated upstream
         if(other.tag == "IngredientTableZone")
+=======
+        if (other.tag == "IngredientTableZone")
+>>>>>>> Stashed changes
         {
             Debug.Log("IngredientInteraction - Near the ingredient tray!");
             nearIngredientTray = true;
         }
 
+<<<<<<< Updated upstream
         if(other.tag == "ShelfZone")
+=======
+        if (other.tag == "ShelfZone")
+>>>>>>> Stashed changes
         {
             //if player is in shelf zone, they cannot drop ingredients
             nearIngredientShelves = true;
@@ -198,7 +210,11 @@ public class IngredientInteraction : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
+<<<<<<< Updated upstream
         if(other.tag == "IngredientTableZone")
+=======
+        if (other.tag == "IngredientTableZone")
+>>>>>>> Stashed changes
         {
             Debug.Log("IngredientInteraction - Exited ingredient tray!");
             nearIngredientTray = false;

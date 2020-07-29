@@ -13,6 +13,7 @@ public class PlayerInteractionManager : MonoBehaviour
 {
     [SerializeField] private string customerTag = "Customer";
 
+    #region unchanged variables
     //RAYCAST VARIABLES
     public float raycastLength = 2f; //how far the raycast extends
 
@@ -38,12 +39,14 @@ public class PlayerInteractionManager : MonoBehaviour
     private IngredientInteraction ingredientInteraction;
     private TableInteraction tableInteraction;
     private WashInteraction washInteraction;
+    #endregion
     private PlayerCustomerInteractionManager customerInteraction;
-    
+    //--------------------------------------------------------------note: I haven't changed the player inventory from a list to a variable
 
     //Player states
     public enum PlayerState
     {
+        #region unchanged player states
         //Default state
         Default,
 
@@ -67,6 +70,7 @@ public class PlayerInteractionManager : MonoBehaviour
         WashingPlate,
         StoppedWashingPlate,
         FinishedWashingPlate,
+        #endregion
 
         //Customer Interaction
         CanPickUpCustomer,
@@ -77,16 +81,19 @@ public class PlayerInteractionManager : MonoBehaviour
 
     void Awake()
     {
+        #region unchanged initialisation
         //initialise scripts    
         shelfInteraction = gameObject.GetComponent<ShelfInteraction>();
         ingredientInteraction = gameObject.GetComponent<IngredientInteraction>();
         tableInteraction = gameObject.GetComponent<TableInteraction>();
         washInteraction = gameObject.GetComponent<WashInteraction>();
+        #endregion
         customerInteraction = gameObject.GetComponent<PlayerCustomerInteractionManager>();
 
         playerState = PlayerState.Default;
     }
 
+    #region unchanged check inventory full method
     //bool to check if inventory is full
     public static bool IsInventoryFull()
     {
@@ -102,10 +109,12 @@ public class PlayerInteractionManager : MonoBehaviour
 
         
     }
+    #endregion
 
     //Raycast function
     public void DetectObjects()
     {
+        #region unchanged (raycast stuff)
         //check for distance from detected object
         if (detectedObject)
         {
@@ -123,15 +132,21 @@ public class PlayerInteractionManager : MonoBehaviour
 
         //Raycast from the front of player for specified length and ignore layers on layermask
         bool foundObject = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, raycastLength, ~layerMask);
+        #endregion
 
         //if an object was found
         if (foundObject)
         {
-
+            #region unchanged
             //draw a yellow ray from object position (origin) forward to the distance of the cast 
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * raycastLength, Color.yellow);
+<<<<<<< Updated upstream
             Debug.Log("PlayerInteractionManager - Object has been found! \n Object tag is: " + hit.collider.tag);
             
+=======
+            //Debug.Log("PlayerInteractionManager - Object has been found! \n Object tag is: " + hit.collider.tag);
+            #endregion
+>>>>>>> Stashed changes
             //if nothing in inventory
             if(objectsInInventory.Count == 0)
             {
@@ -164,6 +179,7 @@ public class PlayerInteractionManager : MonoBehaviour
             //returns the detectedobject's layer (number) as a name
             //Debug.Log("PlayerInteractionManager - Detected object layer: " + LayerMask.LayerToName(detectedObject.layer) + " of layer " + detectedObject.layer);
         }
+        #region unchanged (draw ray if no object was hit)
         else
         {
             //no object hit
@@ -172,6 +188,7 @@ public class PlayerInteractionManager : MonoBehaviour
             
         }
         //Debug.Log(!detectedObject); //return true if no detected object
+        #endregion
     }
 
     public void InteractButton()
@@ -179,6 +196,7 @@ public class PlayerInteractionManager : MonoBehaviour
         //switch cases to check which function to run at which state
         switch (playerState)
         {
+            #region unchanged (all your prev player states)
             //spawning ingredients from shelves states
             case PlayerState.CanSpawnEgg:
                 shelfInteraction.SpawnEgg(detectedObject, objectsInInventory, attachPoint);
@@ -219,6 +237,12 @@ public class PlayerInteractionManager : MonoBehaviour
                 washInteraction.WashDirtyPlate();
                 break;
 
+<<<<<<< Updated upstream
+=======
+            #endregion
+
+            //customer interaction states
+>>>>>>> Stashed changes
             case PlayerState.CanPickUpCustomer:
                 Debug.Log("PlayerInteractionManager - Player state is currently: " + playerState);
                 customerInteraction.PickCustomerUp(detectedObject, objectsInInventory, attachPoint);
@@ -235,6 +259,7 @@ public class PlayerInteractionManager : MonoBehaviour
         }
     }
 
+    #region unchanged
     // Update is called once per frame
     void Update()
     {
@@ -262,6 +287,35 @@ public class PlayerInteractionManager : MonoBehaviour
             washInteraction.FinishWashingPlate();
         }
     }
+    #endregion
 
+<<<<<<< Updated upstream
+=======
+    //checks whether the playerstate is something that should not be changed
+    public static bool CanChangePlayerState()
+    {
+        if(playerState == PlayerState.HoldingCustomer || playerState == PlayerState.HoldingOrder)
+        {
+            return false;
+        } 
+        else
+        {
+            return true;
+        }
+    }
+
+    //changes the player state
+    public static void ChangePlayerState(PlayerState newPlayerState, bool canBypassCheck = false)
+    {
+        if (CanChangePlayerState() || canBypassCheck)
+        {
+            playerState = newPlayerState;
+        } 
+        else
+        {
+            Debug.Log("cannot change playerstate to " + newPlayerState);
+        }
+    }
+>>>>>>> Stashed changes
 
 }

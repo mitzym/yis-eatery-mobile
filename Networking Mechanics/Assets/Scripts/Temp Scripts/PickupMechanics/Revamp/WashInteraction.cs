@@ -90,7 +90,7 @@ public class WashInteraction : MonoBehaviour
                 holdingDirtyPlate = false;
 
                 //change state to can wash
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanWashPlate;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanWashPlate);
                 showWashIcon = true;
 
                 return;
@@ -116,7 +116,7 @@ public class WashInteraction : MonoBehaviour
         stoppedWashingPlate = false;
 
         //set state to washing plate
-        PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.WashingPlate;
+        PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.WashingPlate);
     }
 
     //when done washing plate, reset timer and spawn clean plate
@@ -153,7 +153,7 @@ public class WashInteraction : MonoBehaviour
                                 placedPlateInSink = true;
 
                                 //continue washing plate
-                                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanWashPlate;
+                                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanWashPlate);
                                 return;
                             }
                             else
@@ -175,7 +175,11 @@ public class WashInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+<<<<<<< Updated upstream
         if (PlayerInteractionManager.detectedObject)
+=======
+        if (PlayerInteractionManager.detectedObject) 
+>>>>>>> Stashed changes
         {
             CheckForWashingCriteria();
         }
@@ -206,7 +210,7 @@ public class WashInteraction : MonoBehaviour
                 sinkParentObj = other.gameObject;
 
                 //player can place plate in the sink
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanPlacePlateInSink;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanPlacePlateInSink);
 
             }
 
@@ -214,7 +218,7 @@ public class WashInteraction : MonoBehaviour
             //or if there are still plates in the sink
             else if(stoppedWashingPlate || platesInSinkCount != 0)
             {
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanWashPlate;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanWashPlate);
 
                 showWashIcon = true;
             }
@@ -238,7 +242,7 @@ public class WashInteraction : MonoBehaviour
             if(holdingDirtyPlate || platesInSinkCount != 0)
             {
                 //player exited sink
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.ExitedSink;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.ExitedSink);
                 startTimer = false;
             }
 
@@ -246,7 +250,7 @@ public class WashInteraction : MonoBehaviour
             if(PlayerInteractionManager.playerState == PlayerInteractionManager.PlayerState.WashingPlate)
             {
                 //change state
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.StoppedWashingPlate;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.StoppedWashingPlate);
 
                 //set bool true
                 stoppedWashingPlate = true;

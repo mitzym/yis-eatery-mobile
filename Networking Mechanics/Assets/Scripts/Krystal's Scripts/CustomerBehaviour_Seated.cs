@@ -11,7 +11,12 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
     private TableScript tableSeatedAt = null;
     private bool finishedEating;
     [SerializeField] private GameObject dirtyDishPrefab;
+<<<<<<< Updated upstream
     [SerializeField] private Transform dirtyDishSpawnPoint;
+=======
+    [SerializeField] private Transform dishSpawnPoint, orderIconPos;
+    private OrderGeneration orderGenerationScript;
+>>>>>>> Stashed changes
 
     #region Getters and Setters
     public ChickenRice CustomersOrder
@@ -33,6 +38,22 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
     }
     #endregion
 
+<<<<<<< Updated upstream
+=======
+    //before the customer is visible, make sure to...
+    private void Awake()
+    {
+        //disable the collider
+        TriggerCustomerCollider(false, true);
+
+        //ensure that the order icon is not visible
+        orderIconPos.gameObject.SetActive(false);
+        
+        //get the order generation script
+        orderGenerationScript = OrderGeneration.Instance;
+    }
+
+>>>>>>> Stashed changes
 
     //---------------------BEHAVIOUR WHEN SEATED---------------------
     //when customer has been brought to a table with enough seats, 

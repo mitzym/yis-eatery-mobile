@@ -4,6 +4,27 @@ using UnityEngine;
 
 public class OrderGeneration : MonoBehaviour
 {
+    #region Singleton
+
+    private static OrderGeneration _instance;
+    public static OrderGeneration Instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        Debug.Log(this.gameObject.name);
+
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
+    #endregion
+
     #region Debug Shortcuts
     /*
     private void Update()
@@ -25,6 +46,43 @@ public class OrderGeneration : MonoBehaviour
 
         return newOrder;
     }
+<<<<<<< Updated upstream
+=======
+
+    //Identifies which food order icon should be displayed
+    public GameObject IdentifyIcon(ChickenRice.PossibleChickenRiceLabel chickenRiceLabel)
+    {
+        switch (chickenRiceLabel)
+        {
+            case ChickenRice.PossibleChickenRiceLabel.RoastedChicWPlainRice:
+                return roastedPlain;
+
+            case ChickenRice.PossibleChickenRiceLabel.RoastedChicWPlainRiceEgg:
+                return roastedPlain_egg;
+
+            case ChickenRice.PossibleChickenRiceLabel.RoastedChicWRiceBall:
+                return roastedBall;
+
+            case ChickenRice.PossibleChickenRiceLabel.RoastedChicWRiceBallEgg:
+                return roastedBall_egg;
+
+            case ChickenRice.PossibleChickenRiceLabel.SteamedChicWPlainRice:
+                return steamedPlain;
+
+            case ChickenRice.PossibleChickenRiceLabel.SteamedChicWPlainRiceEgg:
+                return steamedPlain_egg;
+
+            case ChickenRice.PossibleChickenRiceLabel.SteamedChicWRiceBall:
+                return steamedBall;
+
+            case ChickenRice.PossibleChickenRiceLabel.SteamedChicWRiceBallEgg:
+                return steamedBall_egg;
+
+            default:
+                return null;
+        }
+    }
+>>>>>>> Stashed changes
 }
 
 //Object with order properties

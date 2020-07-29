@@ -28,7 +28,7 @@ public class PlayerCustomerInteractionManager : MonoBehaviour
         //allow tables to be detected
         TableColliderManager.ToggleTableDetection(true);
 
-        PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.HoldingCustomer;
+        PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.HoldingCustomer);
     }
 
 
@@ -67,10 +67,32 @@ public class PlayerCustomerInteractionManager : MonoBehaviour
 
             customerBeingHeld = null;
 
-            PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
+            PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default, true);
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    #endregion
+
+
+    //------------------------------------------------------TAKING / SERVING CUSTOMERS' ORDERS----------------------------------------------------------------------
+    #region Picking orders up
+    public void PickOrderUp(GameObject dishObj, List<GameObject> playerInventory, Transform pointAboveHead)
+    {
+        //Parent to attachment point and transform
+        dishObj.transform.parent = pointAboveHead.transform;
+        dishObj.transform.position = pointAboveHead.position;
+
+        //add the customer to the inventory
+        playerInventory.Add(dishObj);
+
+        //change player state
+        PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.HoldingOrder);
+    }
+    #endregion
+
+>>>>>>> Stashed changes
 
 
     private bool CheckThatArgsAreCorrect(List<GameObject> playerInventory, GameObject tableGameobj)
@@ -82,6 +104,7 @@ public class PlayerCustomerInteractionManager : MonoBehaviour
             Debug.Log("player is holding customer and is looking at table");
             return true;
         }
+<<<<<<< Updated upstream
         else if(!tableGameobj.GetComponent<TableScript>())
         {
             Debug.Log("player is not looking at table");
@@ -92,6 +115,37 @@ public class PlayerCustomerInteractionManager : MonoBehaviour
             Debug.Log("player is not holding customer??");
             return false;
         }
+=======
+
+        //else, take the order of the customers at the table
+        tableScript.TakeOrder();
+        PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default);
+    }
+
+    #endregion
+
+
+    #region Serving customers' orders
+    public void CheckCanPutDownOrder(List<GameObject> _playerInventory, GameObject _detectedObj, Transform _dropOffPoint)
+    {
+        GameObject heldDish = FindDishInInventory(_playerInventory);
+
+        if(_detectedObj != null)
+        {
+            //if the player is looking at a customer
+            if (_detectedObj.GetComponent<CustomerBehaviour_Seated>() != null || _detectedObj.transform.parent.gameObject.GetComponent<CustomerBehaviour_Seated>() != null)
+            {
+                if (ServingCustomer(heldDish, _detectedObj))
+                {
+                    _playerInventory.Remove(heldDish);
+                    PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default, true);
+                }
+            } else
+            {
+                Debug.Log("not looking at a customer that can be served");
+            }
+        }
+>>>>>>> Stashed changes
     }
 
 } //end of class

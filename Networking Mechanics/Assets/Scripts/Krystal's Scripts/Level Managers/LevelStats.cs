@@ -88,7 +88,7 @@ public class CustomerPatienceStats
         customerPatience_General = GameBalanceFormulae.customerPatience_formula_General(GameBalanceFormulae.customerPatience_base_General, LevelStats.Level);
         customerPatience_Queue = GameBalanceFormulae.customerPatience_formula_General(GameBalanceFormulae.customerPatience_base_Queue, LevelStats.Level);
         customerPatience_TakeOrder = GameBalanceFormulae.customerPatience_formula_General(GameBalanceFormulae.customerPatience_base_TakeOrder, LevelStats.Level);
-        customerPatience_FoodWait = GameBalanceFormulae.customerPatience_formula_General(GameBalanceFormulae.customerPatience_base_FoodWait, LevelStats.Level);
+        //customerPatience_FoodWait = GameBalanceFormulae.customerPatience_formula_General(GameBalanceFormulae.customerPatience_base_FoodWait, LevelStats.Level);
     }
 }
 
@@ -96,13 +96,13 @@ public class CustomerPatienceStats
 public class GameBalanceFormulae
 {
     public static float customerPatience_base_General = 33f;
-    public static float customerPatience_base_Queue = 33f;
-    public static float customerPatience_base_TakeOrder = 33f;
+    public static float customerPatience_base_Queue = 10f;
+    public static float customerPatience_base_TakeOrder = 7f;
     public static float customerPatience_base_FoodWait = 120f;
 
-    public static float customerPatience_formula_General(float baseNum, float levelNum)
-    {
-        return baseNum / levelNum;
+    public static float customerPatience_formula_General(float minNum, float levelNum)
+    {        
+        return (Mathf.Pow(2, (float)((-1.5 / 5) * levelNum  + 2.4)) * 5 + minNum);
     }
 
     public static float increasePassingScore_formula(float baseNum, float levelNum)
