@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7573709594487455814}
   - component: {fileID: 7573709594487455815}
   - component: {fileID: 2886096614234108643}
+  - component: {fileID: 3465130597173535588}
   m_Layer: 15
   m_Name: PlateContainer_Dirty
   m_TagString: DirtyPlate
@@ -94,6 +95,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6, y: 0.9, z: 0.6}
   m_Center: {x: 0, y: 0.45, z: 0}
+--- !u!114 &3465130597173535588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7573709594487455818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a33b61a00c9aa342b32322a5b785596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4783246958625128651
 PrefabInstance:
   m_ObjectHideFlags: 0

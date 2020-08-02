@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class CustomerBehaviour_Seated : CustomerBehaviour
 {
+    #region unchanged variables and methods
     private ChickenRice customersOrder = null;
     private TableScript tableSeatedAt = null;
     private bool finishedEating = false;
@@ -155,7 +156,7 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
         Destroy(this.gameObject, 5f);
 
     }
-
+#endregion
 
     //customer has bee served the right food and is eating it
     public void EatingFood()
@@ -164,8 +165,8 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
         orderIconPos.gameObject.SetActive(false);
 
         //declare that the table has been dirtied
-        tableSeatedAt.isTableDirty = true;
-
+        //tableSeatedAt.isTableDirty = true; //------------------------------- remove this line
+        #region unchanged script
         //enable eating animation
         CustomerFeedbackScript.PlayEatingPFX();
         CustomerAnimScript.StartEatingAnim();
@@ -182,21 +183,25 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
     {
         Debug.Log("wrong order!!!!!!!!");
     }
-
+#endregion
 
     //function to call once customer finishes eating food
     public void CustomerFinishedFood()
     {
+        #region unchanged script
         //remove the food in front of the customer
         foreach (Transform child in dishSpawnPoint)
         {
             GameObject.Destroy(child.gameObject);
         }
+        #endregion
 
         //Instantiate dirty dish in front of customer
-        Instantiate(dirtyDishPrefab, dishSpawnPoint.position, dishSpawnPoint.localRotation);
+        GameObject dirtyDish = Instantiate(dirtyDishPrefab, dishSpawnPoint.position, dishSpawnPoint.localRotation);
+        dirtyDish.GetComponent<DirtyDishScript>().SetTableScript(tableSeatedAt);
         Debug.Log("Spawning dirty dishes");
 
+        #region unchanged script
         finishedEating = true;
 
         //disable eating animation
@@ -210,5 +215,6 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
         {
             tableSeatedAt.EmptyTable();
         }
+        #endregion
     }
 }

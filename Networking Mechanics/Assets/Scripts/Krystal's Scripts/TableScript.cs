@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class TableScript : MonoBehaviour
 {
+    #region unchanged variables
     [HideInInspector, Range(0, 6)] public int numSeats = 0; //number of seats the table has
     private int numSeated = 0; //number of customers seated at table
 
@@ -43,9 +44,10 @@ public class TableScript : MonoBehaviour
         get { return tableOrders; }
         private set { tableOrders = value; }
     }
+    #endregion
 
-
-    [HideInInspector] public bool isTableDirty = false;
+    //[HideInInspector] public bool isTableDirty = false; //-----------you can get rid of this variable
+    [HideInInspector] public List<GameObject> dirtyDishes = new List<GameObject>();
 
 
     void Start()
@@ -56,6 +58,7 @@ public class TableScript : MonoBehaviour
         //clear the customer and orders lists
         customersSeated.Clear();
         tableOrders.Clear();
+        dirtyDishes.Clear(); //-------------------------------------change here
 
         //update the number of seats the table has
         numSeats = seatPositions.Count;
@@ -67,13 +70,21 @@ public class TableScript : MonoBehaviour
     //check number of customers
     public bool CheckSufficientSeats(int numGuests)
     {
+
         if (customersSeated.Count > 0)
         {
             Debug.Log("CustomersSeated.Count: " + customersSeated.Count);
             tableFeedbackScript.TableOccupied();
             return false;
+        } 
+        else if (dirtyDishes.Count > 0)
+        {
+            Debug.Log("dirtyDishes.Count: " + dirtyDishes.Count);
+            tableFeedbackScript.TableDirty();
+            return false;
         }
 
+        #region unchanged script
         Debug.Log("checking if there are sufficient seats");
 
         if (numGuests <= numSeats)
@@ -101,10 +112,10 @@ public class TableScript : MonoBehaviour
 
             return false;
         }
-        
+        #endregion
     }
 
-
+    #region unchanged methods
     //instantiate 1 customer at every seat, add them to a list, then call the method on the customer to manage their sitting animation + order
     public void SeatGuests(int numGuests)
     {
@@ -230,6 +241,6 @@ public class TableScript : MonoBehaviour
         return true;
     }
 
-
+    #endregion
 
 }//end of tablescript class

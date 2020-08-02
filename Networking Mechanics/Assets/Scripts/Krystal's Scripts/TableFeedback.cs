@@ -6,14 +6,16 @@ using System;
 
 public class TableFeedback : MonoBehaviour
 {
+    #region unchanged variables
     [SerializeField] private Animator canvasAnim, wordAnim;
 
     [Header("ready to order icon")]
     [SerializeField] private GameObject readyToOrderIcon;
 
     [Header("text to display")]
-    [SerializeField] private TextMeshProUGUI word_tmpObj; 
-    [SerializeField] private string insufficientSeats = "Not enough seats", tableOccupied = "Table occupied", handsFull = "Your hands are full!";
+    [SerializeField] private TextMeshProUGUI word_tmpObj;
+    #endregion
+    [SerializeField] private string insufficientSeats = "Not enough seats", tableOccupied = "Table occupied", handsFull = "Your hands are full!", tableDirty = "Table dirty";
 
 
     #region Debugging
@@ -35,6 +37,7 @@ public class TableFeedback : MonoBehaviour
     */
     #endregion
 
+    #region unchanged methods
     private void Start()
     {
         //deactivating all icons / feedback
@@ -58,6 +61,17 @@ public class TableFeedback : MonoBehaviour
 
         StartCoroutine(FadeInFadeOutText(tableOccupied));
     }
+    #endregion
+
+    //feedback that shows that the table is occupied and no customers can be seated there
+    public void TableDirty()
+    {
+        Debug.Log("Table feedback: Has dirty dishes");
+
+        StartCoroutine(FadeInFadeOutText(tableDirty));
+    }
+
+    #region unchanged methods
 
     //feedback that shows that the server's hands are too full to take the customers' order
     public void HandsFullFeedback()
@@ -125,7 +139,8 @@ public class TableFeedback : MonoBehaviour
         yield return null;
     }
 
-
+    #endregion
 
 
 }
+               
