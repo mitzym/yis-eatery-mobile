@@ -59,7 +59,7 @@ public class TableInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerInteractionManager.detectedObject && PlayerInteractionManager.detectedObject.layer == 16 && PlayerInteractionManager.CanChangePlayerState())
+        if (PlayerInteractionManager.detectedObject && PlayerInteractionManager.detectedObject.layer == 16)
         {
             tableItemDetected = true;
         }
@@ -75,14 +75,14 @@ public class TableInteraction : MonoBehaviour
     //Player must be near a table item layer and have nothing in their inventory
     public void CheckTableItemCriteria()
     {
-        if (tableItemDetected && PlayerInteractionManager.CanChangePlayerState())
+        if (tableItemDetected)
         {
             //if inventory not full
             if (!PlayerInteractionManager.IsInventoryFull())
             {
                 //change player state
                 Debug.Log("TableInteraction - Can pick up table item!");
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanPickUpDirtyPlate;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanPickUpDirtyPlate);
             }
             else
             {

@@ -6,6 +6,28 @@ public class OrderScript : MonoBehaviour
 {
     [SerializeField] private ChickenRice.PossibleChickenRiceLabel dishLabel;
     [SerializeField] private GameObject orderIcon;
+    private bool isDishCold = false;
+
+    #region Getters and Setters
+    public ChickenRice.PossibleChickenRiceLabel DishLabel
+    {
+        get { return dishLabel; }
+        private set { dishLabel = value; }
+    }
+    public GameObject OrderIcon
+    {
+        get { return orderIcon; }
+        private set { orderIcon = value; }
+    }
+
+    public bool IsDishCold
+    {
+        get { return isDishCold; }
+    }
+    #endregion
+
+
+    #region Specific properties of dish
     private bool roastedChic, ricePlain, haveEgg;
 
     #region Getters and Setters
@@ -24,22 +46,16 @@ public class OrderScript : MonoBehaviour
         get { return haveEgg; }
         private set { haveEgg = value; }
     }
-    public ChickenRice.PossibleChickenRiceLabel DishLabel
-    {
-        get { return dishLabel; }
-        private set { dishLabel = value; }
-    }
-    public GameObject OrderIcon
-    {
-        get { return orderIcon; }
-        private set { orderIcon = value; }
-    }
+
+    #endregion
     #endregion
 
     private void Awake()
     {
         ToggleIcon(true);
 
+        #region Set bools
+        /*
         //set the properties based on the dish label
         switch (dishLabel)
         {
@@ -95,10 +111,14 @@ public class OrderScript : MonoBehaviour
                 break;
             #endregion
         }
+        */
+        #endregion
     }
 
     public void ToggleIcon(bool _enableIcon)
     {
         orderIcon.SetActive(_enableIcon);
     }
+
+
 }

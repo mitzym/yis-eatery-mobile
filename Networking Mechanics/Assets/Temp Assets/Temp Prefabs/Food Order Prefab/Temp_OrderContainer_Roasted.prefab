@@ -133,8 +133,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.7, y: 1.7631688, z: 0.7}
-  m_Center: {x: 0, y: 0.8815844, z: 0}
+  m_Size: {x: 0.7, y: 2.7678926, z: 0.7}
+  m_Center: {x: 0, y: 0.3792225, z: 0}
 --- !u!114 &3865907017010060835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,6 +241,7 @@ GameObject:
   - component: {fileID: 7551776320496198960}
   - component: {fileID: 2545036601400033493}
   - component: {fileID: 549130520317924017}
+  - component: {fileID: 703856405261857216}
   m_Layer: 17
   m_Name: inGameUI_customer_orderedFood_BG
   m_TagString: Untagged
@@ -325,3 +326,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b2840ca3956b814fa0d52ee20a9d7be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &703856405261857216
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4079887903183187977}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 74fb5509e01dbe5458d26c8eac2d8896, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

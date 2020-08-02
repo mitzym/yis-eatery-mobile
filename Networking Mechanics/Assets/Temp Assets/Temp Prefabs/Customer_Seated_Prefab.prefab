@@ -40,7 +40,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2696737361459990464}
-  - component: {fileID: 5428297572643543881}
   - component: {fileID: 413805340303299190}
   m_Layer: 0
   m_Name: Order Icon Pos
@@ -63,34 +62,6 @@ Transform:
   m_Father: {fileID: 8100879364930874577}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5428297572643543881
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5809828707758401104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8f4b708b399adc44a0e272ca9144c45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roastedPlain: {fileID: 1222314240389047993, guid: 4acdf9ce15fd0034684a961465f38059,
-    type: 3}
-  roastedPlain_egg: {fileID: 4144296393705070710, guid: 43dfdcee8cfa2c24b8f6668e27514cc8,
-    type: 3}
-  roastedBall: {fileID: 3638628321099502745, guid: f50c1c67e51e3e94a99efd85a263a6f0,
-    type: 3}
-  roastedBall_egg: {fileID: 2928165185166600702, guid: 654534b303a35e549a890a3d8437d927,
-    type: 3}
-  steamedPlain: {fileID: 4699734604925051970, guid: 36a49405461f0f9439a1ab4feb47dca5,
-    type: 3}
-  steamedPlain_egg: {fileID: 7568286412522003799, guid: b30a709b566d9c14681f40d757248af3,
-    type: 3}
-  steamedBall: {fileID: 2173837710032050948, guid: 8dfea38afb628364698a9e3c94a420c6,
-    type: 3}
-  steamedBall_egg: {fileID: 7033165136169453126, guid: f4293680bb7ae1942a0e906d2717e7f1,
-    type: 3}
 --- !u!212 &413805340303299190
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -433,7 +404,6 @@ MonoBehaviour:
     type: 3}
   dishSpawnPoint: {fileID: 3615217096320347028}
   orderIconPos: {fileID: 2696737361459990464}
-  orderGenerationScript: {fileID: 5428297572643543881}
 --- !u!114 &8061215714513260888
 MonoBehaviour:
   m_ObjectHideFlags: 0

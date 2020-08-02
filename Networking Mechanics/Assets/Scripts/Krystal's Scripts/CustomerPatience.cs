@@ -14,10 +14,11 @@ public class CustomerPatience : MonoBehaviour
     //variables
     [SerializeField] private float updateFrequency = 0.2f;
     [SerializeField] private Image patienceMeterImg;
+    [SerializeField] private Color finalColor = Color.red;
+    private Color startColor;
 
     private Coroutine patienceMeterCoroutine;
     private bool isCoroutineRunning = false; //bool used to ensure that coroutine does not get called while coroutine is running
-
 
     #region Debug Shortcuts
     /*
@@ -40,6 +41,7 @@ public class CustomerPatience : MonoBehaviour
     {
         //disable the image
         patienceMeterImg.enabled = false;
+        startColor = patienceMeterImg.color;
     }
 
 
@@ -55,6 +57,7 @@ public class CustomerPatience : MonoBehaviour
         isCoroutineRunning = true;
 
         patienceMeterCoroutine = StartCoroutine(UpdatePatienceMeter(totalPatience, callback));
+
     }
 
 
@@ -78,7 +81,7 @@ public class CustomerPatience : MonoBehaviour
 
     //method that updates customers' patience meter, then, when patience runs out, calls the method (callback) passed into it 
     //understanding callbacks: https://stackoverflow.com/questions/54772578/passing-a-function-as-a-function-parameter/54772707
-    private IEnumerator UpdatePatienceMeter(float totalPatience, Action callback = null)
+    private IEnumerator UpdatePatienceMeter(float totalPatience, Action callback = null, bool changeColor = true)
     {
         float currentPatience = totalPatience;
 
@@ -90,6 +93,11 @@ public class CustomerPatience : MonoBehaviour
             //calculate amount of patience left
             currentPatience -= updateFrequency;
             patienceMeterImg.fillAmount = currentPatience / totalPatience;
+
+            if (changeColor)
+            {
+                patienceMeterImg.color = Color.Lerp(finalColor, startColor, currentPatience / totalPatience);
+            }
 
             yield return new WaitForSeconds(updateFrequency);
         }
@@ -108,6 +116,5 @@ public class CustomerPatience : MonoBehaviour
         yield return null;
     }
 
-    
 
 }

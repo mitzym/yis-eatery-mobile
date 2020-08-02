@@ -4,6 +4,27 @@ using UnityEngine;
 
 public class OrderGeneration : MonoBehaviour
 {
+    #region Singleton
+
+    private static OrderGeneration _instance;
+    public static OrderGeneration Instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        Debug.Log(this.gameObject.name);
+
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+
+    #endregion
+
     #region Debug Shortcuts
     /*
     private void Update()
@@ -30,7 +51,7 @@ public class OrderGeneration : MonoBehaviour
     }
 
     //Identifies which food order icon should be displayed
-    private GameObject IdentifyIcon(ChickenRice.PossibleChickenRiceLabel chickenRiceLabel)
+    public GameObject IdentifyIcon(ChickenRice.PossibleChickenRiceLabel chickenRiceLabel)
     {
         switch (chickenRiceLabel)
         {

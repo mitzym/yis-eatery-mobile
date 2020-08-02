@@ -167,10 +167,10 @@ public class ShelfInteraction : MonoBehaviour
         {
             //player in shelf zone, cannot drop anything here
             Debug.Log("ShelfInteraction - Player is in the shelf zone!");
-            if (PlayerInteractionManager.IsInventoryFull() && PlayerInteractionManager.CanChangePlayerState())
+            if (PlayerInteractionManager.IsInventoryFull())
             {
                 //if inventory full, then set state to default
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default);
             }
 
         }
@@ -179,7 +179,7 @@ public class ShelfInteraction : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (shelfDetected && PlayerInteractionManager.CanChangePlayerState())
+        if (shelfDetected)
         {
             //if player inventory is not full
             if (!PlayerInteractionManager.IsInventoryFull())
@@ -190,7 +190,7 @@ public class ShelfInteraction : MonoBehaviour
                 {
                     if(detectedObject == "EggShelf")
                     {
-                        PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanSpawnEgg;
+                        PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanSpawnEgg);
                         Debug.Log("ShelfInteraction - Player can spawn an egg!");
                     }
                     
@@ -198,19 +198,19 @@ public class ShelfInteraction : MonoBehaviour
 
                 else if (other.tag == "ChickenShelfZone" && detectedObject == "ChickenShelf")
                 {
-                    PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanSpawnChicken;
+                    PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanSpawnChicken);
                     Debug.Log("ShelfInteraction - Player can spawn a chicken!");
                 }
 
                 else if (other.tag == "CucumberShelfZone" && detectedObject == "CucumberShelf")
                 {
-                    PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanSpawnCucumber;
+                    PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanSpawnCucumber);
                     Debug.Log("ShelfInteraction - Player can spawn a cucumber!");
                 }
 
                 else if (other.tag == "RiceTubZone" && detectedObject == "RiceTub")
                 {
-                    PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanSpawnRice;
+                    PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanSpawnRice);
                     Debug.Log("ShelfInteraction - Player can spawn some rice!");
                 }
             }
@@ -221,14 +221,14 @@ public class ShelfInteraction : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.tag == "ShelfZone" && PlayerInteractionManager.CanChangePlayerState())
+        if(other.tag == "ShelfZone")
         {
             Debug.Log("Player exited shelf zone!");
             if (PlayerInteractionManager.IsInventoryFull())
             {
                 //if inventory is full, player can now drop items
                 Debug.Log("ShelfInteraction - Player can now drop items!");
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanDropIngredient;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanDropIngredient);
             }
         }
 

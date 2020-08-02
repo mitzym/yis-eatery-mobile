@@ -126,7 +126,7 @@ public class IngredientInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       if(PlayerInteractionManager.detectedObject && PlayerInteractionManager.detectedObject.layer == 15 && PlayerInteractionManager.CanChangePlayerState())
+       if(PlayerInteractionManager.detectedObject && PlayerInteractionManager.detectedObject.layer == 15)
         {
             ingredientDetected = true;
         }
@@ -142,7 +142,7 @@ public class IngredientInteraction : MonoBehaviour
     //only works if the object detected by radar is an ingredient layer
     public void CheckIngredientCriteria()
     {
-        if (ingredientDetected && PlayerInteractionManager.CanChangePlayerState())
+        if (ingredientDetected)
         {
             //PICK UP CRITERIA
             //if inventory is not full, able to pick up
@@ -150,7 +150,7 @@ public class IngredientInteraction : MonoBehaviour
             {
                 print("IngredientInteraction - Can pick up ingredient!");
                 //Switch the state
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanPickUpIngredient;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanPickUpIngredient);
             }
 
             //DROP CRITERIA
@@ -170,51 +170,44 @@ public class IngredientInteraction : MonoBehaviour
 
                 //switch the state
                 if(!nearIngredientShelves)
-                PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.CanDropIngredient;
+                PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.CanDropIngredient);
             }
         }
         //if there is no detected object + the player isn't holding a customer, player state returns to default
-        if (!PlayerInteractionManager.detectedObject && !WashInteraction.placedPlateInSink && PlayerInteractionManager.CanChangePlayerState())
+        if (!PlayerInteractionManager.detectedObject && !WashInteraction.placedPlateInSink)
         {
-            PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
+            PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default);
         }
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if (PlayerInteractionManager.CanChangePlayerState())
+        //if enter the ingredient tray zone
+        if (other.tag == "IngredientTableZone")
         {
-            //if enter the ingredient tray zone
-            if (other.tag == "IngredientTableZone")
-            {
-                Debug.Log("IngredientInteraction - Near the ingredient tray!");
-                nearIngredientTray = true;
-            }
-
-            if (other.tag == "ShelfZone")
-            {
-                //if player is in shelf zone, they cannot drop ingredients
-                nearIngredientShelves = true;
-            }
+            Debug.Log("IngredientInteraction - Near the ingredient tray!");
+            nearIngredientTray = true;
         }
-        
+
+        if (other.tag == "ShelfZone")
+        {
+            //if player is in shelf zone, they cannot drop ingredients
+            nearIngredientShelves = true;
+        }
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if (PlayerInteractionManager.CanChangePlayerState())
+        if (other.tag == "IngredientTableZone")
         {
-            if (other.tag == "IngredientTableZone")
-            {
-                Debug.Log("IngredientInteraction - Exited ingredient tray!");
-                nearIngredientTray = false;
-            }
+            Debug.Log("IngredientInteraction - Exited ingredient tray!");
+            nearIngredientTray = false;
+        }
 
-            if (other.tag == "ShelfZone")
-            {
-                //if player is in shelf zone, they cannot drop ingredients
-                nearIngredientShelves = false;
-            }
+        if (other.tag == "ShelfZone")
+        {
+            //if player is in shelf zone, they cannot drop ingredients
+            nearIngredientShelves = false;
         }
     }
 }

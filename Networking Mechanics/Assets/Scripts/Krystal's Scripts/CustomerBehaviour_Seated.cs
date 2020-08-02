@@ -13,7 +13,7 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
 
     [SerializeField] private GameObject dirtyDishPrefab;
     [SerializeField] private Transform dishSpawnPoint, orderIconPos;
-    [SerializeField] private OrderGeneration orderGenerationScript;
+    private OrderGeneration orderGenerationScript;
 
     #region Getters and Setters
     public ChickenRice CustomersOrder
@@ -43,6 +43,9 @@ public class CustomerBehaviour_Seated : CustomerBehaviour
 
         //ensure that the order icon is not visible
         orderIconPos.gameObject.SetActive(false);
+        
+        //get the order generation script
+        orderGenerationScript = OrderGeneration.Instance;
     }
 
 

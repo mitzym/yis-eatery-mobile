@@ -34,7 +34,7 @@ public class PlayerCustomerInteractionManager : MonoBehaviour
         //allow tables to be detected
         TableColliderManager.ToggleTableDetection(true);
 
-        PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.HoldingCustomer;
+        PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.HoldingCustomer);
     }
 
 
@@ -74,7 +74,7 @@ public class PlayerCustomerInteractionManager : MonoBehaviour
 
             customerBeingHeld = null;
 
-            PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
+            PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default, true);
         }
     }
 
@@ -93,7 +93,7 @@ public class PlayerCustomerInteractionManager : MonoBehaviour
         playerInventory.Add(dishObj);
 
         //change player state
-        PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.HoldingOrder;
+        PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.HoldingOrder);
     }
     #endregion
 
@@ -122,54 +122,32 @@ public class PlayerCustomerInteractionManager : MonoBehaviour
 
         //else, take the order of the customers at the table
         tableScript.TakeOrder();
-        PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
+        PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default);
     }
 
     #endregion
 
 
     #region Serving customers' orders
-    public void CheckCanPutDownOrder(List<GameObject> _playerInventory, GameObject _customer, Transform _dropOffPoint)
+    public void CheckCanPutDownOrder(List<GameObject> _playerInventory, GameObject _detectedObj, Transform _dropOffPoint)
     {
         GameObject heldDish = FindDishInInventory(_playerInventory);
 
-        if(_customer != null)
+        if(_detectedObj != null)
         {
             //if the player is looking at a customer
-            if (_customer.GetComponent<CustomerBehaviour_Seated>() != null || _customer.transform.parent.gameObject.GetComponent<CustomerBehaviour_Seated>() != null)
+            if (_detectedObj.GetComponent<CustomerBehaviour_Seated>() != null || _detectedObj.transform.parent.gameObject.GetComponent<CustomerBehaviour_Seated>() != null)
             {
-                if (ServingCustomer(heldDish, _customer))
+                if (ServingCustomer(heldDish, _detectedObj))
                 {
-                    UpdateStateAndInventory(_playerInventory, heldDish);
+                    _playerInventory.Remove(heldDish);
+                    PlayerInteractionManager.ChangePlayerState(PlayerInteractionManager.PlayerState.Default, true);
                 }
-            }
-            else
+            } else
             {
-                UpdateStateAndInventory(_playerInventory, heldDish);
-
-                //drop the dish and unparent it
-                heldDish.transform.position = _dropOffPoint.position;
-                heldDish.transform.parent = null;
+                Debug.Log("not looking at a customer that can be served");
             }
         }
-        else
-        {
-            UpdateStateAndInventory(_playerInventory, heldDish);
-
-            //drop the dish and unparent it
-            heldDish.transform.position = _dropOffPoint.position;
-            heldDish.transform.parent = null;
-        }
-
-
-    }
-
-
-    //Update the player state and remove the delivered dish from inventory
-    private void UpdateStateAndInventory(List<GameObject> _inventory, GameObject removeObj)
-    {
-        _inventory.Remove(removeObj);
-        PlayerInteractionManager.playerState = PlayerInteractionManager.PlayerState.Default;
     }
 
 
