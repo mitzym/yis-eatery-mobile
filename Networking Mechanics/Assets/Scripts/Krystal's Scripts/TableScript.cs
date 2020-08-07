@@ -201,7 +201,7 @@ public class TableScript : MonoBehaviour
     {
         //disable the order icon
         tableFeedbackScript.ToggleOrderIcon(false);
-        isTableDirty = false; 
+        //isTableDirty = false; 
 
         //clear the table of customers and have them leave angrily
         EmptyTable(true);

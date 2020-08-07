@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+#region unchanged class
 //All stats related to the level number and score
 public class LevelStats : MonoBehaviour
 {
@@ -70,7 +70,7 @@ public class LevelStats : MonoBehaviour
     }
 
 }
-
+#endregion
 
 //All stats related to how much patience the customer has
 public class CustomerPatienceStats
@@ -80,6 +80,7 @@ public class CustomerPatienceStats
     public static float customerPatience_TakeOrder = GameBalanceFormulae.customerPatience_base_TakeOrder;
     public static float customerPatience_FoodWait = GameBalanceFormulae.customerPatience_base_FoodWait;
     public static float customerEatingDuration = 5f;
+    public static float drinkPatienceIncrease = 5f; //------------------------------------------------------------------- change here
 
     public static void UpdateStats()
     {
@@ -90,6 +91,7 @@ public class CustomerPatienceStats
     }
 }
 
+#region unchanged class
 //formula to calculate the patience of various stats based on the level number
 public class GameBalanceFormulae
 {
@@ -107,3 +109,4 @@ public class GameBalanceFormulae
         return baseNum * levelNum;
     }
 }
+#endregion

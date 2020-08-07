@@ -25,9 +25,81 @@ public class GenerateDish : MonoBehaviour
 
     #endregion
 
+
+
+    #region Spawning Order Slip for Chef
+    //variables
+    //list of orders yet to be served
+    private List<ChickenRice> allPendingOrders = new List<ChickenRice>();
+    public List<ChickenRice> AllPendingOrders
+    {
+        get { return allPendingOrders; }
+        private set { allPendingOrders = value; }
+    }
+
+    //list of orders yet to be displayed to chef
+    [SerializeField] private int numOrdersToDisplay = 10;
+    private List<ChickenRice> hiddenOrders = new List<ChickenRice>();
+
+
+    public void NewOrders(ChickenRice _orderDetails)
+    {
+        AllPendingOrders.Add(_orderDetails);
+    }
+
+
+
+
+    public void RemoveOrder(ChickenRice _orderDetails)
+    {
+        if (hiddenOrders.Count > 0)
+        {
+            SpawnOrderSlip(hiddenOrders[0]);
+        }
+    }
+
+    
+
+
+    private void SpawnOrderSlip(ChickenRice _orderDetails)
+    {
+        /*
+        //for each egg that is not active in the hierarchy,
+        foreach (GameObject egg in allEggs)
+        {
+            if (!(egg.activeInHierarchy))
+            {
+                while (true)
+                {
+                    Vector3 newPos = GetRandomPosition();
+
+                    if (CheckPositionIsEmpty(newPos, checkRadius))
+                    {
+                        MoveAndActivate(egg, newPos);
+                        break;
+                    }
+
+                    yield return null;
+                } // end of while
+
+                break;
+            }// end of if
+
+            yield return null;
+        } //end of foreach
+        */
+    }
+    #endregion
+
+
+
+    #region Spawning dishes to be served
+    //variables
+    //dish prefabs
     [SerializeField] private GameObject roastedPlain, roastedPlain_egg, roastedBall, roastedBall_egg;
     [SerializeField] private GameObject steamedPlain, steamedPlain_egg, steamedBall, steamedBall_egg;
 
+    //spawn points
     [SerializeField] private Transform[] dishSpawnPoints = new Transform[3];
     private GameObject[] dishesSpawned = new GameObject[3];
 
@@ -101,5 +173,5 @@ public class GenerateDish : MonoBehaviour
 
         return -1;
     }
-
+    #endregion
 }
